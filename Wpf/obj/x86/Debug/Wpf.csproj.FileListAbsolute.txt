@@ -1,0 +1,35 @@
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\bin\Debug\Wpf.exe
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\bin\Debug\Wpf.pdb
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\MainWindow.baml
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\App.g.cs
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\Wpf_MarkupCompile.cache
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\Wpf.g.resources
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\Wpf.Properties.Resources.resources
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\GenerateResource-ResGen.read.1.tlog
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\GenerateResource-ResGen.write.1.tlog
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\Wpf.exe
+C:\Users\Max\AppData\Local\Temporary Projects\Wpf\obj\x86\Debug\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Wpf.exe
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\MainWindow.baml
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\MainWindow.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\App.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\Wpf_MarkupCompile.cache
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\Wpf.g.resources
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\Wpf.Properties.Resources.resources
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\GenerateResource-ResGen.read.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\GenerateResource-ResGen.write.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\Wpf.exe
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Wpf.exe.config
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Precedent.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Precedent.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Comment.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Comment.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Actor.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Actor.pdb

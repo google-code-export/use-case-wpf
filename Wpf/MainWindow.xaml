@@ -1,0 +1,48 @@
+﻿<Window x:Class="Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        Title="Use Case" Height="728" Width="946">
+    <Grid Height="739" Background="#FF8A9A8A">
+
+       
+        <Button Height="23" HorizontalAlignment="Left" Margin="337,12,0,0" Name="BtnActor" VerticalAlignment="Top" Width="28" Click="BtnActor_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/ActorBtn.jpg" />
+            </Button.Background>
+        </Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="439,12,0,0" Name="BtnAssociation" VerticalAlignment="Top" Width="28">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/AssociationBtn.bmp" />
+            </Button.Background>
+        </Button>
+        <Button Height="23" Margin="371,12,0,0" Name="BtnPrecedent" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28" Click="BtnPrecedent_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/PrecedentBtn.bmp" />
+            </Button.Background>
+        </Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="405,12,0,0" Name="BtnComment" VerticalAlignment="Top" Width="28" Click="BtnComment_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/NoteBtn.BMP" />
+            </Button.Background>
+        </Button>
+        <Button Content="E" Height="23" HorizontalAlignment="Left" Margin="473,12,0,0" Name="BtnExtend" VerticalAlignment="Top" Width="28" Background="White" />
+        <Button Content="I" Height="23" HorizontalAlignment="Left" Margin="507,12,0,0" Name="BtnInclude" VerticalAlignment="Top" Width="28" Background="White" />
+        <Button Height="23" HorizontalAlignment="Left" Margin="46,12,0,0" Name="BtnLoad" VerticalAlignment="Top" Width="28" BorderThickness="0">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/LoadBtn.png" />
+            </Button.Background>
+        </Button>
+        <Canvas Height="638" HorizontalAlignment="Left" Margin="12,41,0,0" Name="myCanvas" VerticalAlignment="Top" Width="900" Background="White"></Canvas>
+        <Button Height="23" HorizontalAlignment="Left" Margin="80,12,0,0" Name="BtnSave" VerticalAlignment="Top" Width="28">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/SaveBtn.png" />
+            </Button.Background>
+        </Button>
+        <Button Height="23" Name="BtnNew" Width="28" Margin="12,12,0,704" HorizontalAlignment="Left">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/AddBtn.png" />
+            </Button.Background>
+        </Button>
+    </Grid>
+</Window>

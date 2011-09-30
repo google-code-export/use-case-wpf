@@ -15,7 +15,7 @@ namespace Wpf
 {
     public partial class MainWindow : Window
     {
-
+//*****************************Переменные***********************************
         Point InitMousePos;         //Позиция мышки при клике на объекте
         bool FlagArrow = false;     //флаг, указывающий на попытку добавления связи между объектами (true - связь в данный момент добавляется, false - не добаляется)
         bool FirstObject = true;    //флаг, указывающий какой объект выбран для связи (true - значит первый)
@@ -23,95 +23,13 @@ namespace Wpf
         Point StartPoint;           //точка из которой выходит связь
         Point EndPoint;             //конечная точка
         object First;               //первый выбранный объект при добавлении связей
+//**************************************************************************
+
         public MainWindow()
         {
             InitializeComponent();
         }
-        /// <summary>
-        /// Метод добавляет связь определенного типа между 2-мя объектами
-        /// </summary>
-        /// <param name="First">Первый объект (из которого выходит стрелка)</param>
-        /// <param name="Second">Второй объект (к которому подводится стрелка)</param>
-        /// <param name="type">Тип связи</param>
-        void AddLine(object First, object Second, int type)
-        {
-            if (First is Actor.myActor)
-            {
-                Actor.myActor actor = (Actor.myActor)First;
-                StartPoint.X = actor.Margin.Left + 50;
-                StartPoint.Y = actor.Margin.Top + 110;
-            }
-            if (Second is Actor.myActor)
-            {
-                Actor.myActor Actor = (Actor.myActor)Second;
-                Point[] p = new Point[8];
-                p[0].X = Actor.Margin.Left;
-                p[1].X = Actor.Margin.Left;
-                p[2].X = Actor.Margin.Left;
-                p[3].X = Actor.Margin.Left + 50;
-                p[4].X = Actor.Margin.Left + 50;
-                p[5].X = Actor.Margin.Left + 100;
-                p[6].X = Actor.Margin.Left + 100;
-                p[7].X = Actor.Margin.Left + 100;
-                p[0].Y = Actor.Margin.Top;
-                p[1].Y = Actor.Margin.Top + 110;
-                p[2].Y = Actor.Margin.Top + 220;
-                p[3].Y = Actor.Margin.Top;
-                p[4].Y = Actor.Margin.Top + 220;
-                p[5].Y = Actor.Margin.Top;
-                p[6].Y = Actor.Margin.Top + 110;
-                p[7].Y = Actor.Margin.Top + 220;
-
-          
-                EndPoint = MinimumDistance(new Point(StartPoint.X, StartPoint.Y), p);
-
-            }
-            //добаится еще для прецедентов и комментариев
-            //добавится тип
-
-            ArrowLine aline = new ArrowLine();
-            aline.Stroke = Brushes.Black;
-            aline.StrokeThickness = 3;
-            aline.StrokeDashArray.Add(8.0);
-            aline.X1 = StartPoint.X;
-            aline.Y1 = StartPoint.Y;
-            aline.X2 = EndPoint.X;
-            aline.Y2 = EndPoint.Y;
-
-            AddMove(First);
-            AddMove(Second);
-
-            FirstObject = true;
-            SecondObject = false;
-            FlagArrow = false;
-            
-
-            myCanvas.Children.Add(aline);
-            
-        }
-        /// <summary>
-        /// Метод добавляет обработчик события MouseMove.
-        /// </summary>
-        /// <param name="Object">Объект, к которому добавляется обработчик события</param>
-        private void AddMove(object Object)
-        {
-            if (Object is Actor.myActor)
-            {
-                Actor.myActor actor = (Actor.myActor)Object;
-                actor.MouseMove += myActor_MouseMove;
-            }
-            if (Object is Precedent.myPrecedent)
-            {
-                Precedent.myPrecedent precedent = (Precedent.myPrecedent)Object;
-                precedent.MouseMove += myPrecedent_MouseMove;
-            }
-            if (Object is Comment.myComment)
-            {
-                Comment.myComment comment = (Comment.myComment)Object;
-                comment.MouseMove += myComment_MouseMove;
-            }
-                
-        }
+//***************************Обработчики событий*****************************
         /// <summary>
         /// Обработчик события нажатия кнопки "Добавление актера"
         /// </summary>
@@ -366,27 +284,7 @@ namespace Wpf
             precedent.MouseDown += new MouseButtonEventHandler(myPrecedent_Move_MouseDown);
             precedent.MouseMove += new MouseEventHandler(myPrecedent_MouseMove);
         }
-        /// <summary>
-        /// Метод, ищущий минимальное расстояние мужду точкой StartPoint и точками из массива p
-        /// </summary>
-        /// <param name="StartPoint">Первая точка</param>
-        /// <param name="p">Массив из 8-ми точек, лежащих по краям объека</param>
-        /// <returns>Возвращает одну из 8-ми точек из массива р, до которой расстояние минимально</returns>
-        private Point MinimumDistance( Point StartPoint, Point[] p)
-        {
-            Point PointMin = p[0];
-            double MinDistance = Math.Sqrt(Math.Pow(StartPoint.X-p[0].X,2)+Math.Pow(StartPoint.Y-p[0].Y,2));
-            for (int i = 1; i < p.Length; ++i)
-            {
-                double CerrentDistance =  Math.Sqrt(Math.Pow(StartPoint.X - p[i].X, 2) + Math.Pow(StartPoint.Y - p[i].Y, 2));
-                if (MinDistance > CerrentDistance)
-                {
-                    PointMin = p[i];
-                    MinDistance = CerrentDistance;
-                }
-            }
-            return PointMin;
-        }
+
         /// <summary>
         /// Обработчик события добавления связи
         /// </summary>
@@ -416,6 +314,115 @@ namespace Wpf
         {
             FlagArrow = true;
             //запоминаем тип
+        }
+//**************************************************************************
+
+
+//*******************************МЕТОДЫ*************************************
+        /// <summary>
+        /// Метод добавляет связь определенного типа между 2-мя объектами
+        /// </summary>
+        /// <param name="First">Первый объект (из которого выходит стрелка)</param>
+        /// <param name="Second">Второй объект (к которому подводится стрелка)</param>
+        /// <param name="type">Тип связи</param>
+        void AddLine(object First, object Second, int type)
+        {
+            if (First is Actor.myActor)
+            {
+                Actor.myActor actor = (Actor.myActor)First;
+                StartPoint.X = actor.Margin.Left + 50;
+                StartPoint.Y = actor.Margin.Top + 110;
+            }
+            if (Second is Actor.myActor)
+            {
+                Actor.myActor Actor = (Actor.myActor)Second;
+                Point[] p = new Point[8];
+                p[0].X = Actor.Margin.Left;
+                p[1].X = Actor.Margin.Left;
+                p[2].X = Actor.Margin.Left;
+                p[3].X = Actor.Margin.Left + 50;
+                p[4].X = Actor.Margin.Left + 50;
+                p[5].X = Actor.Margin.Left + 100;
+                p[6].X = Actor.Margin.Left + 100;
+                p[7].X = Actor.Margin.Left + 100;
+                p[0].Y = Actor.Margin.Top;
+                p[1].Y = Actor.Margin.Top + 110;
+                p[2].Y = Actor.Margin.Top + 220;
+                p[3].Y = Actor.Margin.Top;
+                p[4].Y = Actor.Margin.Top + 220;
+                p[5].Y = Actor.Margin.Top;
+                p[6].Y = Actor.Margin.Top + 110;
+                p[7].Y = Actor.Margin.Top + 220;
+
+
+                EndPoint = MinimumDistance(new Point(StartPoint.X, StartPoint.Y), p);
+
+            }
+            //добаится еще для прецедентов и комментариев
+            //добавится тип
+
+            ArrowLine aline = new ArrowLine();
+            aline.Stroke = Brushes.Black;
+            aline.StrokeThickness = 3;
+            aline.StrokeDashArray.Add(8.0);
+            aline.X1 = StartPoint.X;
+            aline.Y1 = StartPoint.Y;
+            aline.X2 = EndPoint.X;
+            aline.Y2 = EndPoint.Y;
+
+            AddMove(First);
+            AddMove(Second);
+
+            FirstObject = true;
+            SecondObject = false;
+            FlagArrow = false;
+
+
+            myCanvas.Children.Add(aline);
+
+        }
+        /// <summary>
+        /// Метод добавляет обработчик события MouseMove.
+        /// </summary>
+        /// <param name="Object">Объект, к которому добавляется обработчик события</param>
+        private void AddMove(object Object)
+        {
+            if (Object is Actor.myActor)
+            {
+                Actor.myActor actor = (Actor.myActor)Object;
+                actor.MouseMove += myActor_MouseMove;
+            }
+            if (Object is Precedent.myPrecedent)
+            {
+                Precedent.myPrecedent precedent = (Precedent.myPrecedent)Object;
+                precedent.MouseMove += myPrecedent_MouseMove;
+            }
+            if (Object is Comment.myComment)
+            {
+                Comment.myComment comment = (Comment.myComment)Object;
+                comment.MouseMove += myComment_MouseMove;
+            }
+        }
+        /// <summary>
+        /// Метод, ищущий минимальное расстояние мужду точкой StartPoint и точками из массива p
+        /// </summary>
+        /// <param name="StartPoint">Первая точка</param>
+        /// <param name="p">Массив из 8-ми точек, лежащих по краям объека</param>
+        /// <returns>Возвращает одну из 8-ми точек из массива р, до которой расстояние минимально</returns>
+        private Point MinimumDistance(Point StartPoint, Point[] p)
+        {
+            Point PointMin = p[0];
+            double MinDistance = Math.Sqrt(Math.Pow(StartPoint.X - p[0].X, 2) + Math.Pow(StartPoint.Y - p[0].Y, 2));
+            for (int i = 1; i < p.Length; ++i)
+            {
+                double CerrentDistance = Math.Sqrt(Math.Pow(StartPoint.X - p[i].X, 2) + Math.Pow(StartPoint.Y - p[i].Y, 2));
+                if (MinDistance > CerrentDistance)
+                {
+                    PointMin = p[i];
+                    MinDistance = CerrentDistance;
+                }
+            }
+            return PointMin;
         }
     }
 }

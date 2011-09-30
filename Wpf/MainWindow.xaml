@@ -44,5 +44,10 @@
                 <ImageBrush ImageSource="/Wpf;component/Images/AddBtn.png" />
             </Button.Background>
         </Button>
+        <Button Height="23" HorizontalAlignment="Left" Margin="114,12,0,0" Name="BtnColor" VerticalAlignment="Top" Width="28" Click="BtnColor_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/ColorBtn.png" Stretch="UniformToFill" TileMode="None" />
+            </Button.Background>
+        </Button>
     </Grid>
 </Window>

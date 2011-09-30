@@ -31,3 +31,4 @@ D:\System (C) на ONE\Мои документы\Домашняя работа\4
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Release\GenerateResource.write.1.tlog
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Release\Wpf.exe
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Release\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Release\WPFColorPickerLib.dll

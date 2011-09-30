@@ -315,6 +315,24 @@ namespace Wpf
             FlagArrow = true;
             //запоминаем тип
         }
+        /// <summary>
+        /// Обработчик события нажатия кнопки "Изменение цвета"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnColor_Click(object sender, RoutedEventArgs e)
+        {
+
+            WPFColorPickerLib.ColorDialog colorDialog = new WPFColorPickerLib.ColorDialog();
+            colorDialog.Owner = this;
+            if ((bool)colorDialog.ShowDialog())
+            {
+                Precedent.myPrecedent precedent = (Precedent.myPrecedent)myCanvas.Children[0];//вот тут удали 
+                precedent.Color = colorDialog.SelectedColor;
+                //перебрать все прецеденты и изменить им цвет
+
+            }
+        }
 //**************************************************************************
 
 
@@ -424,5 +442,7 @@ namespace Wpf
             }
             return PointMin;
         }
+
+
     }
 }

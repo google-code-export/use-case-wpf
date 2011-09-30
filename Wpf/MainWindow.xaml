@@ -11,7 +11,7 @@
                 <ImageBrush ImageSource="/Wpf;component/Images/ActorBtn.jpg" />
             </Button.Background>
         </Button>
-        <Button Height="23" HorizontalAlignment="Left" Margin="439,12,0,0" Name="BtnAssociation" VerticalAlignment="Top" Width="28">
+        <Button Height="23" HorizontalAlignment="Left" Margin="439,12,0,0" Name="BtnAssociation" VerticalAlignment="Top" Width="28" Click="BtnAssociation_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/AssociationBtn.bmp" />
             </Button.Background>
@@ -26,8 +26,8 @@
                 <ImageBrush ImageSource="/Wpf;component/Images/NoteBtn.BMP" />
             </Button.Background>
         </Button>
-        <Button Content="E" Height="23" HorizontalAlignment="Left" Margin="473,12,0,0" Name="BtnExtend" VerticalAlignment="Top" Width="28" Background="White" />
-        <Button Content="I" Height="23" HorizontalAlignment="Left" Margin="507,12,0,0" Name="BtnInclude" VerticalAlignment="Top" Width="28" Background="White" />
+        <Button Content="E" Height="23" HorizontalAlignment="Left" Margin="473,12,0,0" Name="BtnExtend" VerticalAlignment="Top" Width="28" Background="White" Click="BtnExtend_Click" />
+        <Button Content="I" Height="23" HorizontalAlignment="Left" Margin="507,12,0,0" Name="BtnInclude" VerticalAlignment="Top" Width="28" Background="White" Click="BtnInclude_Click" />
         <Button Height="23" HorizontalAlignment="Left" Margin="46,12,0,0" Name="BtnLoad" VerticalAlignment="Top" Width="28" BorderThickness="0">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/LoadBtn.png" />

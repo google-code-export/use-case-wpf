@@ -16,67 +16,164 @@ namespace Wpf
     public partial class MainWindow : Window
     {
 
-        Point InitMousePos;
+        Point InitMousePos;         //Позиция мышки при клике на объекте
+        bool FlagArrow = false;     //флаг, указывающий на попытку добавления связи между объектами (true - связь в данный момент добавляется, false - не добаляется)
+        bool FirstObject = true;    //флаг, указывающий какой объект выбран для связи (true - значит первый)
+        bool SecondObject = false;  //флаг, указывающий какой объект выбран для связи (true - значит второй)
+        Point StartPoint;           //точка из которой выходит связь
+        Point EndPoint;             //конечная точка
+        object First;               //первый выбранный объект при добавлении связей
         public MainWindow()
         {
             InitializeComponent();
         }
-        void AddEllipse()
+        /// <summary>
+        /// Метод добавляет связь определенного типа между 2-мя объектами
+        /// </summary>
+        /// <param name="First">Первый объект (из которого выходит стрелка)</param>
+        /// <param name="Second">Второй объект (к которому подводится стрелка)</param>
+        /// <param name="type">Тип связи</param>
+        void AddLine(object First, object Second, int type)
         {
+            if (First is Actor.myActor)
+            {
+                Actor.myActor actor = (Actor.myActor)First;
+                StartPoint.X = actor.Margin.Left + 50;
+                StartPoint.Y = actor.Margin.Top + 110;
+            }
+            if (Second is Actor.myActor)
+            {
+                Actor.myActor Actor = (Actor.myActor)Second;
+                Point[] p = new Point[8];
+                p[0].X = Actor.Margin.Left;
+                p[1].X = Actor.Margin.Left;
+                p[2].X = Actor.Margin.Left;
+                p[3].X = Actor.Margin.Left + 50;
+                p[4].X = Actor.Margin.Left + 50;
+                p[5].X = Actor.Margin.Left + 100;
+                p[6].X = Actor.Margin.Left + 100;
+                p[7].X = Actor.Margin.Left + 100;
+                p[0].Y = Actor.Margin.Top;
+                p[1].Y = Actor.Margin.Top + 110;
+                p[2].Y = Actor.Margin.Top + 220;
+                p[3].Y = Actor.Margin.Top;
+                p[4].Y = Actor.Margin.Top + 220;
+                p[5].Y = Actor.Margin.Top;
+                p[6].Y = Actor.Margin.Top + 110;
+                p[7].Y = Actor.Margin.Top + 220;
+
+          
+                EndPoint = MinimumDistance(new Point(StartPoint.X, StartPoint.Y), p);
+
+            }
+            //добаится еще для прецедентов и комментариев
+            //добавится тип
+
+            ArrowLine aline = new ArrowLine();
+            aline.Stroke = Brushes.Black;
+            aline.StrokeThickness = 3;
+            aline.StrokeDashArray.Add(8.0);
+            aline.X1 = StartPoint.X;
+            aline.Y1 = StartPoint.Y;
+            aline.X2 = EndPoint.X;
+            aline.Y2 = EndPoint.Y;
+
+            AddMove(First);
+            AddMove(Second);
+
+            FirstObject = true;
+            SecondObject = false;
+            FlagArrow = false;
             
-            //PRECEDENT
 
-            Precedent.myPrecedent precedent = new Precedent.myPrecedent();
-            precedent.Margin = new Thickness(10, 70, 0, 0);
-            precedent.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
-            precedent.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            precedent.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            precedent.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
-
-            precedent.Text = "Text text text";
-
-            myCanvas.Children.Add(precedent);
-            precedent.MouseDown += new MouseButtonEventHandler(myPrecedent_Move_MouseDown);
-            precedent.MouseMove += new MouseEventHandler(myPrecedent_MouseMove);
-
+            myCanvas.Children.Add(aline);
+            
         }
-        void AddLine()
+        /// <summary>
+        /// Метод добавляет обработчик события MouseMove.
+        /// </summary>
+        /// <param name="Object">Объект, к которому добавляется обработчик события</param>
+        private void AddMove(object Object)
         {
-            ArrowLine aline1 = new ArrowLine();
-            aline1.Stroke = Brushes.Black;
-            aline1.StrokeThickness = 3;
-            aline1.StrokeDashArray.Add(8.0);
-            aline1.X1 = 400;
-            aline1.Y1 = 400;
-            aline1.X2 = 500;
-            aline1.Y2 = 500;
-            
-            myCanvas.Children.Add(aline1);
-            
+            if (Object is Actor.myActor)
+            {
+                Actor.myActor actor = (Actor.myActor)Object;
+                actor.MouseMove += myActor_MouseMove;
+            }
+            if (Object is Precedent.myPrecedent)
+            {
+                Precedent.myPrecedent precedent = (Precedent.myPrecedent)Object;
+                precedent.MouseMove += myPrecedent_MouseMove;
+            }
+            if (Object is Comment.myComment)
+            {
+                Comment.myComment comment = (Comment.myComment)Object;
+                comment.MouseMove += myComment_MouseMove;
+            }
+                
         }
-
+        /// <summary>
+        /// Обработчик события нажатия кнопки "Добавление актера"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnActor_Click(object sender, RoutedEventArgs e)
         {
             Actor.myActor actor = new Actor.myActor();
             actor.Margin = new Thickness(50, 170, 0, 0);
-            actor.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
-            actor.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            actor.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            actor.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
-
             actor.Text = "Text text text";
-
             myCanvas.Children.Add(actor);
-            actor.MouseDown += new MouseButtonEventHandler(myActor_Move_MouseDown);
-            actor.MouseMove += new MouseEventHandler(myActor_MouseMove);
+            actor.MouseDown += myActor_Move_MouseDown;
+            actor.MouseMove += myActor_MouseMove;
             
         }
+        /// <summary>
+        /// Обработчик события при клике на актере
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void myActor_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Mouse.Capture((Actor.myActor)sender);
-            InitMousePos.X = e.GetPosition(myCanvas).X;
-            InitMousePos.Y = e.GetPosition(myCanvas).Y;
+            if (FlagArrow)                                                  //если происходит добавление связи
+            {
+                Actor.myActor actor = (Actor.myActor)sender;
+                actor.MouseMove -= myActor_MouseMove;                       //удаляем обработчик события MouseMove
+                if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                {
+                    FirstObject = false;                                    
+                    SecondObject = true;
+                    StartPoint.X = actor.Margin.Left + 50;                  //начальная точка - середина актера
+                    StartPoint.Y = actor.Margin.Top + 110;
+
+                    First = sender;
+
+                }
+                else if (SecondObject)                                      //если выбран второй объект
+                {
+
+                    EndPoint.X = actor.Margin.Left + 50;                    //конечная точка - середина актера
+                    EndPoint.Y = actor.Margin.Top + 110;
+                    if (StartPoint != EndPoint)                             //если выбраны разные объекты
+                    {
+                        //add association in DB
+
+                        AddLine(First, sender, 1);                          //добавляем связь
+
+                    }
+                }
+            }
+            else                                                            //если происходит перемещение объекта
+            {
+                Mouse.Capture((Actor.myActor)sender);                       //захватываем мышь          
+                InitMousePos.X = e.GetPosition(myCanvas).X;
+                InitMousePos.Y = e.GetPosition(myCanvas).Y;
+            }
         }
+        /// <summary>
+        /// Обработчик события перемещения актера 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void myActor_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -84,49 +181,60 @@ namespace Wpf
                 var Actor = (Actor.myActor)sender;
                 double mouseX = e.GetPosition(myCanvas).X, mouseY = e.GetPosition(myCanvas).Y;
                 Point currentPoint = e.GetPosition(myCanvas);
+                //если актер находится в пределах канваса и перемещение совершено на расстояние большее минимально предусмотренного
                 if ((mouseX > 50) && (mouseX < myCanvas.ActualWidth - 50) && (mouseY > 110) && (mouseY < myCanvas.ActualHeight - 110)
                     && Math.Abs(currentPoint.X - InitMousePos.X) > SystemParameters.MinimumHorizontalDragDistance
                     && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
+                    //меняем позицию актера
                     Actor.Margin = new Thickness(e.GetPosition(myCanvas).X - 50, e.GetPosition(myCanvas).Y - 110, 0, 0);
-                    Point[] p = new Point[8];
-                    p[0].X = Actor.Margin.Left;
-                    p[1].X = Actor.Margin.Left;
-                    p[2].X = Actor.Margin.Left;
-                    p[3].X = Actor.Margin.Left+50;
-                    p[4].X = Actor.Margin.Left+50;
-                    p[5].X = Actor.Margin.Left+100;                    
-                    p[6].X = Actor.Margin.Left+100;
-                    p[7].X = Actor.Margin.Left+100;
-                    p[0].Y = Actor.Margin.Top;
-                    p[1].Y = Actor.Margin.Top+110;
-                    p[2].Y = Actor.Margin.Top+220;
-                    p[3].Y = Actor.Margin.Top ;
-                    p[4].Y = Actor.Margin.Top +220;
-                    p[5].Y = Actor.Margin.Top ;
-                    p[6].Y = Actor.Margin.Top + 110;
-                    p[7].Y = Actor.Margin.Top + 220;
 
-                    ArrowLine line = (ArrowLine)myCanvas.Children[0];
-                    Point PointMin = new Point();
-                    PointMin = MinimumDistance(new Point(line.X1, line.Y1), p);
-                    
-                    line.X2 = PointMin.X;
-                    line.Y2 = PointMin.Y;
+                    //пока не удалять!!!
+ 
+                    //Point[] p = new Point[8];
+                    //p[0].X = Actor.Margin.Left;
+                    //p[1].X = Actor.Margin.Left;
+                    //p[2].X = Actor.Margin.Left;
+                    //p[3].X = Actor.Margin.Left+50;
+                    //p[4].X = Actor.Margin.Left+50;
+                    //p[5].X = Actor.Margin.Left+100;                    
+                    //p[6].X = Actor.Margin.Left+100;
+                    //p[7].X = Actor.Margin.Left+100;
+                    //p[0].Y = Actor.Margin.Top;
+                    //p[1].Y = Actor.Margin.Top+110;
+                    //p[2].Y = Actor.Margin.Top+220;
+                    //p[3].Y = Actor.Margin.Top ;
+                    //p[4].Y = Actor.Margin.Top +220;
+                    //p[5].Y = Actor.Margin.Top ;
+                    //p[6].Y = Actor.Margin.Top + 110;
+                    //p[7].Y = Actor.Margin.Top + 220;
+                    //ArrowLine line = (ArrowLine)myCanvas.Children[0];
+                    //Point PointMin = new Point();
+                    //PointMin = MinimumDistance(new Point(line.X1, line.Y1), p);
+                    //line.X2 = PointMin.X;
+                    //line.Y2 = PointMin.Y;
 
                 }
             }
             else
-                Mouse.Capture(null);
+                Mouse.Capture(null);//освобождаем захват мыши
         }
-        
+        /// <summary>
+        /// Обработчик события при клике на прецедент
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void myPrecedent_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Mouse.Capture((Precedent.myPrecedent)sender);
             InitMousePos.X = e.GetPosition(myCanvas).X;
             InitMousePos.Y = e.GetPosition(myCanvas).Y;
         }
-        //перемещение PRECEDENT
+        /// <summary>
+        /// Обработчик события перемещения прецедента
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void myPrecedent_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -139,58 +247,67 @@ namespace Wpf
                     && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
                     Precedent.Margin = new Thickness(e.GetPosition(myCanvas).X - 75, e.GetPosition(myCanvas).Y - 37.5, 0, 0);
-                    Point[] p = new Point[8];
-                    p[0].X = Precedent.Margin.Left;
-                    p[1].X = Precedent.Margin.Left + 37.5;
-                    p[2].X = Precedent.Margin.Left + 37.5;
-                    p[3].X = Precedent.Margin.Left + 75;
-                    p[4].X = Precedent.Margin.Left + 75;
-                    p[5].X = Precedent.Margin.Left + 112.5;
-                    p[6].X = Precedent.Margin.Left + 112.5;
-                    p[7].X = Precedent.Margin.Left + 150;
-                    p[0].Y = Precedent.Margin.Top + 37.5;
-                    p[1].Y = Precedent.Margin.Top + 5;
-                    p[2].Y = Precedent.Margin.Top + 70;
-                    p[3].Y = Precedent.Margin.Top;
-                    p[4].Y = Precedent.Margin.Top + 75;
-                    p[5].Y = Precedent.Margin.Top + 5;
-                    p[6].Y = Precedent.Margin.Top + 70;
-                    p[7].Y = Precedent.Margin.Top + 37.5;
 
-                    ArrowLine line = (ArrowLine)myCanvas.Children[0];
-                    Point PointMin = new Point();
-                    PointMin = MinimumDistance(new Point(line.X1, line.Y1), p);
+                    //Point[] p = new Point[8];
+                    //p[0].X = Precedent.Margin.Left;
+                    //p[1].X = Precedent.Margin.Left + 37.5;
+                    //p[2].X = Precedent.Margin.Left + 37.5;
+                    //p[3].X = Precedent.Margin.Left + 75;
+                    //p[4].X = Precedent.Margin.Left + 75;
+                    //p[5].X = Precedent.Margin.Left + 112.5;
+                    //p[6].X = Precedent.Margin.Left + 112.5;
+                    //p[7].X = Precedent.Margin.Left + 150;
+                    //p[0].Y = Precedent.Margin.Top + 37.5;
+                    //p[1].Y = Precedent.Margin.Top + 5;
+                    //p[2].Y = Precedent.Margin.Top + 70;
+                    //p[3].Y = Precedent.Margin.Top;
+                    //p[4].Y = Precedent.Margin.Top + 75;
+                    //p[5].Y = Precedent.Margin.Top + 5;
+                    //p[6].Y = Precedent.Margin.Top + 70;
+                    //p[7].Y = Precedent.Margin.Top + 37.5;
 
-                    line.X2 = PointMin.X;
-                    line.Y2 = PointMin.Y;
+                    //ArrowLine line = (ArrowLine)myCanvas.Children[0];
+                    //Point PointMin = new Point();
+                    //PointMin = MinimumDistance(new Point(line.X1, line.Y1), p);
+
+                    //line.X2 = PointMin.X;
+                    //line.Y2 = PointMin.Y;
 
                 }
             }
             else
                 Mouse.Capture(null);
         }
-
+        /// <summary>
+        /// Обработчик события "Добавление комментария"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnComment_Click(object sender, RoutedEventArgs e)
         {
             Comment.myComment comment = new Comment.myComment();
             comment.Margin = new Thickness(50, 170, 0, 0);
-            comment.HorizontalContentAlignment = System.Windows.HorizontalAlignment.Left;
-            comment.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-            comment.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-            comment.VerticalContentAlignment = System.Windows.VerticalAlignment.Top;
-
             comment.Text = "Text text text";
-
             myCanvas.Children.Add(comment);
             comment.MouseDown += new MouseButtonEventHandler(myComment_Move_MouseDown);
             comment.MouseMove += new MouseEventHandler(myComment_MouseMove);
         }
+        /// <summary>
+        /// Обработчик события при клике на комментарий
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void myComment_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Mouse.Capture((Comment.myComment)sender);
             InitMousePos.X = e.GetPosition(myCanvas).X;
             InitMousePos.Y = e.GetPosition(myCanvas).Y;
         }
+        /// <summary>
+        /// Обработчик события перемещения комментария
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void myComment_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -203,44 +320,58 @@ namespace Wpf
                     && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
                     Comment.Margin = new Thickness(e.GetPosition(myCanvas).X - 65, e.GetPosition(myCanvas).Y - 50, 0, 0);
-                    Point[] p = new Point[8];
-                    p[0].X = Comment.Margin.Left;
-                    p[1].X = Comment.Margin.Left;
-                    p[2].X = Comment.Margin.Left;
-                    p[3].X = Comment.Margin.Left + 65;
-                    p[4].X = Comment.Margin.Left + 65;
-                    p[5].X = Comment.Margin.Left + 125;
-                    p[6].X = Comment.Margin.Left + 130;
-                    p[7].X = Comment.Margin.Left + 130;
-                    p[0].Y = Comment.Margin.Top;
-                    p[1].Y = Comment.Margin.Top + 50;
-                    p[2].Y = Comment.Margin.Top + 100;
-                    p[3].Y = Comment.Margin.Top;
-                    p[4].Y = Comment.Margin.Top + 100;
-                    p[5].Y = Comment.Margin.Top + 5;
-                    p[6].Y = Comment.Margin.Top + 50;
-                    p[7].Y = Comment.Margin.Top + 100;
+                    //Point[] p = new Point[8];
+                    //p[0].X = Comment.Margin.Left;
+                    //p[1].X = Comment.Margin.Left;
+                    //p[2].X = Comment.Margin.Left;
+                    //p[3].X = Comment.Margin.Left + 65;
+                    //p[4].X = Comment.Margin.Left + 65;
+                    //p[5].X = Comment.Margin.Left + 125;
+                    //p[6].X = Comment.Margin.Left + 130;
+                    //p[7].X = Comment.Margin.Left + 130;
+                    //p[0].Y = Comment.Margin.Top;
+                    //p[1].Y = Comment.Margin.Top + 50;
+                    //p[2].Y = Comment.Margin.Top + 100;
+                    //p[3].Y = Comment.Margin.Top;
+                    //p[4].Y = Comment.Margin.Top + 100;
+                    //p[5].Y = Comment.Margin.Top + 5;
+                    //p[6].Y = Comment.Margin.Top + 50;
+                    //p[7].Y = Comment.Margin.Top + 100;
 
-                    ArrowLine line = (ArrowLine)myCanvas.Children[0];
-                    Point PointMin = new Point();
-                    PointMin = MinimumDistance(new Point(line.X1, line.Y1), p);
+                    //ArrowLine line = (ArrowLine)myCanvas.Children[0];
+                    //Point PointMin = new Point();
+                    //PointMin = MinimumDistance(new Point(line.X1, line.Y1), p);
 
-                    line.X2 = PointMin.X;
-                    line.Y2 = PointMin.Y;
+                    //line.X2 = PointMin.X;
+                    //line.Y2 = PointMin.Y;
 
-                    Canvas.SetZIndex(line, 10);//to front
+                    //Canvas.SetZIndex(line, 10);//to front
                 }
             }
             else
                 Mouse.Capture(null);
         }
-
+        /// <summary>
+        /// Обработчик события "Добавление прецедента"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnPrecedent_Click(object sender, RoutedEventArgs e)
         {
-            AddLine();
-            AddEllipse();
-        }
 
+            Precedent.myPrecedent precedent = new Precedent.myPrecedent();
+            precedent.Margin = new Thickness(10, 70, 0, 0);
+            precedent.Text = "Text text text";
+            myCanvas.Children.Add(precedent);
+            precedent.MouseDown += new MouseButtonEventHandler(myPrecedent_Move_MouseDown);
+            precedent.MouseMove += new MouseEventHandler(myPrecedent_MouseMove);
+        }
+        /// <summary>
+        /// Метод, ищущий минимальное расстояние мужду точкой StartPoint и точками из массива p
+        /// </summary>
+        /// <param name="StartPoint">Первая точка</param>
+        /// <param name="p">Массив из 8-ми точек, лежащих по краям объека</param>
+        /// <returns>Возвращает одну из 8-ми точек из массива р, до которой расстояние минимально</returns>
         private Point MinimumDistance( Point StartPoint, Point[] p)
         {
             Point PointMin = p[0];
@@ -255,6 +386,36 @@ namespace Wpf
                 }
             }
             return PointMin;
+        }
+        /// <summary>
+        /// Обработчик события добавления связи
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnAssociation_Click(object sender, RoutedEventArgs e)
+        {
+            FlagArrow = true;
+            //запоминаем тип
+        }
+        /// <summary>
+        /// Обработчик события добавления связи Extend
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnExtend_Click(object sender, RoutedEventArgs e)
+        {
+            FlagArrow = true;
+            //запоминием тип
+        }
+        /// <summary>
+        /// Обработчик события добавления связи Include
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnInclude_Click(object sender, RoutedEventArgs e)
+        {
+            FlagArrow = true;
+            //запоминаем тип
         }
     }
 }

@@ -74,6 +74,8 @@
     <Compile Include="ArrowEnds.cs" />
     <Compile Include="ArrowLineBase.cs" />
     <Compile Include="ArrowPolyline.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -34,3 +34,22 @@ D:\System (C) на ONE\Мои документы\Домашняя работа\4
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Actor.dll
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\Actor.pdb
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Debug\WPFColorPickerLib.dll
+C:\Users\burtovoy\Desktop\UceCase\Wpf\bin\Debug\Wpf.exe.config
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\Wpf.exe
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\Wpf.pdb
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\MainWindow.baml
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\MainWindow.g.cs
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\App.g.cs
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\Wpf_MarkupCompile.cache
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\Wpf.g.resources
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\Wpf.Properties.Resources.resources
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\GenerateResource-ResGen.read.1.tlog
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\GenerateResource-ResGen.write.1.tlog
+C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\burtovoy\Desktop\UceCase\Wpf\bin\Debug\Wpf.exe
+C:\Users\burtovoy\Desktop\UceCase\Wpf\bin\Debug\Wpf.pdb
+C:\Users\burtovoy\Desktop\UceCase\Wpf\bin\Debug\Actor.pdb
+C:\Users\burtovoy\Desktop\UceCase\Wpf\bin\Debug\Comment.pdb
+C:\Users\burtovoy\Desktop\UceCase\Wpf\bin\Debug\Precedent.pdb

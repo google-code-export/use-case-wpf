@@ -1,0 +1,14 @@
+﻿<Model xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Wpf">
+  <max_id>0</max_id>
+  <objects_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfintModel.Uml_objectXi8CSFo9>
+      <d2p1:Key>0</d2p1:Key>
+      <d2p1:Value>
+        <_text />
+        <_x>1</_x>
+        <_y>2</_y>
+      </d2p1:Value>
+    </d2p1:KeyValueOfintModel.Uml_objectXi8CSFo9>
+  </objects_list>
+  <relations_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+</Model>

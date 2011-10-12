@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Wpf
 {
     public partial class MainWindow : Window
@@ -27,6 +28,16 @@ namespace Wpf
 
         public MainWindow()
         {
+            Model bred = new Model();
+            Model bred1 = new Model();
+            int x1 = bred.add_object(1, 2, "");
+            int x2 = bred.add_object(1, 2, "");
+            bred.add_relation(x1, x2, "");
+            bred.delete_object(x1);
+            Serializer ololo = new Serializer();
+            ololo.SaveData("ololo.ololo",bred);
+            bred1 = ololo.LoadData("ololo.ololo");
+
             InitializeComponent();
         }
 //***************************Обработчики событий*****************************

@@ -1,0 +1,24 @@
+﻿<Model xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Wpf">
+  <max_id>2</max_id>
+  <objects_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfintModel.Uml_objectXi8CSFo9>
+      <d2p1:Key>1</d2p1:Key>
+      <d2p1:Value>
+        <color xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows.Media">
+          <d5p1:A>0</d5p1:A>
+          <d5p1:B>0</d5p1:B>
+          <d5p1:G>0</d5p1:G>
+          <d5p1:R>0</d5p1:R>
+          <d5p1:ScA>0</d5p1:ScA>
+          <d5p1:ScB>0</d5p1:ScB>
+          <d5p1:ScG>0</d5p1:ScG>
+          <d5p1:ScR>0</d5p1:ScR>
+        </color>
+        <text />
+        <x>1</x>
+        <y>2</y>
+      </d2p1:Value>
+    </d2p1:KeyValueOfintModel.Uml_objectXi8CSFo9>
+  </objects_list>
+  <relations_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+</Model>

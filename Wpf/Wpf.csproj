@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -74,7 +75,7 @@
     <Compile Include="ArrowEnds.cs" />
     <Compile Include="ArrowLineBase.cs" />
     <Compile Include="ArrowPolyline.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="Serializer.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

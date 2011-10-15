@@ -32,3 +32,42 @@ D:\System (C) на ONE\Мои документы\Домашняя работа\4
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Release\Wpf.exe
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\obj\x86\Release\Wpf.pdb
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\Wpf\Wpf\bin\Release\WPFColorPickerLib.dll
+C:\GoogleProjects\UseCase\Wpf\bin\Release\Wpf.exe.config
+C:\GoogleProjects\UseCase\Wpf\bin\Release\Wpf.exe
+C:\GoogleProjects\UseCase\Wpf\bin\Release\Wpf.pdb
+C:\GoogleProjects\UseCase\Wpf\bin\Release\WPFColorPickerLib.dll
+C:\GoogleProjects\UseCase\Wpf\bin\Release\Actor.pdb
+C:\GoogleProjects\UseCase\Wpf\bin\Release\Comment.pdb
+C:\GoogleProjects\UseCase\Wpf\bin\Release\Precedent.pdb
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\ResolveAssemblyReference.cache
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\MainWindow.baml
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\MainWindow.g.cs
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\App.g.cs
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\Wpf_MarkupCompile.cache
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\Wpf.g.resources
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\Wpf.Properties.Resources.resources
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\GenerateResource.read.1.tlog
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\GenerateResource.write.1.tlog
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\Wpf.exe
+C:\GoogleProjects\UseCase\Wpf\obj\x86\Release\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Wpf.exe.config
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Wpf.exe
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Actor.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Comment.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Precedent.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\WPFColorPickerLib.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Actor.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Comment.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\bin\Release\Precedent.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\ResolveAssemblyReference.cache
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\MainWindow.baml
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\MainWindow.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\App.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf_MarkupCompile.cache
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf.g.resources
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf.Properties.Resources.resources
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\GenerateResource.read.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\GenerateResource.write.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf.exe
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf.pdb

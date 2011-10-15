@@ -12,7 +12,7 @@ namespace Wpf
     public class Model
     {
         [DataContract]
-        private class Relation
+        public class Relation
         {
             [DataMember]
             public int from {get; set;}
@@ -39,6 +39,8 @@ namespace Wpf
             [DataMember]
             public string text { get; set; }
             [DataMember]
+            public string type { get; set; }
+            [DataMember]
             public Color color { get; set; }
 
             public Uml_object()
@@ -46,11 +48,12 @@ namespace Wpf
 
             }
 
-            public Uml_object( int x_in, int y_in, string text_in)
+            public Uml_object( int x_in, int y_in, string text_in, string type_in)
             {
                 x = x_in;
                 y = y_in;
                 text = text_in;
+                type = type_in;
             }
         }
         [DataMember]
@@ -58,7 +61,7 @@ namespace Wpf
         [DataMember]
         private SortedList <int, Uml_object> objects_list ;
         [DataMember]
-        private SortedList<int, Relation> relations_list ;
+        public SortedList<int, Relation> relations_list ;
    
         // Конструктор
         public Model()
@@ -74,10 +77,10 @@ namespace Wpf
          * @text - описание
          * @return - id добавленного объекта
         */
-        public int add_object(int x, int y, string text)
+        public int add_object(int x, int y, string text, string type)
         {
             max_id++;
-            Uml_object obj = new Uml_object(x, y, text);
+            Uml_object obj = new Uml_object(x, y, text, type);
             objects_list.Add(max_id, obj);  
             return max_id;   
         }
@@ -134,7 +137,7 @@ namespace Wpf
             }
             return ids_list;
         }
-        /* Вернуть id связей которые выходят в объекта
+        /* Вернуть id связей которые выходят из объекта
         * @id - объект
         * @return List<int> список айдишников которые выходят из объекта
         */
@@ -188,6 +191,10 @@ namespace Wpf
         public void delete_relation(int id_in)
         {
             relations_list.Remove(id_in);
+        }
+        public void get_object_id_by_relation_id(int id)
+        {
+ 
         }
 
     }

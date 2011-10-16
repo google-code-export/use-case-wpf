@@ -11,9 +11,9 @@
                 <ImageBrush ImageSource="/Wpf;component/Images/ActorBtn.jpg" />
             </Button.Background>
         </Button>
-        <Button Height="23" HorizontalAlignment="Right" Margin="0,12,480,0" Name="BtnGeneralization" VerticalAlignment="Top" Width="28" ToolTip="Association" Click="BtnGeneralization_Click">
+        <Button Height="23" HorizontalAlignment="Right" Margin="0,12,480,0" Name="BtnGeneralization" VerticalAlignment="Top" Width="28" ToolTip="Generalization" Click="BtnGeneralization_Click">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/AssociationBtn.bmp" />
+                <ImageBrush ImageSource="/Wpf;component/Images/GeneralizationBtn.bmp" />
             </Button.Background>
         </Button>
         <Button Height="23" Margin="0,12,582,0" Name="BtnPrecedent" VerticalAlignment="Top" HorizontalAlignment="Right" Width="28" Click="BtnPrecedent_Click" ToolTip="Precedent">

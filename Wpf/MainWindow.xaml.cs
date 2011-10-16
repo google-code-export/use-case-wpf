@@ -71,15 +71,12 @@ namespace Wpf
         /// <param name="e"></param>
         void myActor_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
-
             Actor.myActor actor = (Actor.myActor)sender;
             if (this.Cursor != Cursors.Cross)
             {
                 if (!FlagArrow)
                 {
-                                    
-                    Mouse.Capture((Actor.myActor)sender);                       //захватываем мышь          
+                    Mouse.Capture(actor);                       //захватываем мышь          
                     InitMousePos.X = e.GetPosition(myCanvas).X;
                     InitMousePos.Y = e.GetPosition(myCanvas).Y;
 
@@ -91,30 +88,18 @@ namespace Wpf
                 else
                 //если происходит добавление связи
                 {
-                    //actor.MouseMove -= myActor_MouseMove;                       //удаляем обработчик события MouseMove
                     if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
                     {
                         FirstObject = false;
                         SecondObject = true;
-
-
-
-                        //StartPoint.X = actor.Margin.Left + 50;                  //начальная точка - середина актера
-                        //StartPoint.Y = actor.Margin.Top + 110;
                         First = sender;
                         return;
                     }
                     else if (SecondObject)                                      //если выбран второй объект
                     {
-
-                        //EndPoint.X = actor.Margin.Left + 50;                    //конечная точка - середина актера
-                        //EndPoint.Y = actor.Margin.Top + 110;
-                        //if (StartPoint != EndPoint)                             //если выбраны разные объекты
                         if(First!=sender)
                         {
                             Second = sender;
-                            //add association in DB
-                                                      //добавляем связь
                             int id = AddLineInDB(First, Second,TypeAssociation);
                             AddLine(First, Second, TypeAssociation, id);
                         }
@@ -123,6 +108,7 @@ namespace Wpf
             }
             else                                                                //Удаление актера
             {
+                MoveRelation(actor.Id, false);
                 myCanvas.Children.Remove(actor);
                 this.Cursor = Cursors.Arrow;
             }
@@ -146,59 +132,8 @@ namespace Wpf
                 {
                     //меняем позицию актера
                     Actor.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
-                    
-                    
-                    //bred.edit_x_by_id(Actor.Id, Actor.Margin.Left);
-                    //bred.edit_y_by_id(Actor.Id, Actor.Margin.Top);
                     //Переместить все связанные связи
-                    List<int> ListIdIn =  bred.get_all_relations_id_in(Actor.Id);
-                    List<int> ListIdOut = bred.get_all_relations_id_out(Actor.Id);
-
-                    for (int i = 0; i < myCanvas.Children.Count; ++i)
-                    {
-                        if (myCanvas.Children[i] is ArrowLine)
-                        {
-                            ArrowLine aline = (ArrowLine)myCanvas.Children[i];
-
-                            if (ListIdIn.Contains(Convert.ToInt32(aline.Uid)))
-                            {
-                                int id = Convert.ToInt32(aline.Uid);
-                                myCanvas.Children.Remove(aline);
-                                if (bred.relations_list[id].type != "Generalization")
-                                    myCanvas.Children.Remove((TextBox)getChildrenById(id-65000));
-                                AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);   
-                            }
-                            if (ListIdOut.Contains(Convert.ToInt32(aline.Uid)))
-                            {
-                                int id = Convert.ToInt32(aline.Uid);
-                                myCanvas.Children.Remove(aline);
-                                if (bred.relations_list[id].type != "Generalization")
-                                    myCanvas.Children.Remove((TextBox)getChildrenById(id - 65000));
-                                AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
-
-                            }
-                        }
-                        if (myCanvas.Children[i] is Line)
-                        {
-                            Line line = (Line)myCanvas.Children[i];
-                            if (ListIdIn.Contains(Convert.ToInt32(line.Uid)))
-                            {
-                                int id = Convert.ToInt32(line.Uid);
-                                myCanvas.Children.Remove(line);
-                                AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
-
-                            }
-                            if (ListIdOut.Contains(Convert.ToInt32(line.Uid)))
-                            {
-                                int id = Convert.ToInt32(line.Uid);
-                                myCanvas.Children.Remove(line);
-                                AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
-
-                            }
-                        }
-                    }
-
-
+                    MoveRelation(Actor.Id, true);
                 }
             }
         }
@@ -226,17 +161,41 @@ namespace Wpf
             Precedent.myPrecedent precedent = (Precedent.myPrecedent)sender;
             if (this.Cursor != Cursors.Cross)
             {
-                Mouse.Capture((Precedent.myPrecedent)sender);
-                InitMousePos.X = e.GetPosition(myCanvas).X;
-                InitMousePos.Y = e.GetPosition(myCanvas).Y;
+                if (!FlagArrow)
+                {
+                    Mouse.Capture(precedent);                       //захватываем мышь          
+                    InitMousePos.X = e.GetPosition(myCanvas).X;
+                    InitMousePos.Y = e.GetPosition(myCanvas).Y;
 
-                InitMousePosObject.X = e.GetPosition(precedent).X;
-                InitMousePosObject.Y = e.GetPosition(precedent).Y;
-                isMove = true;
-
+                    InitMousePosObject.X = e.GetPosition(precedent).X;
+                    InitMousePosObject.Y = e.GetPosition(precedent).Y;
+                    isMove = true;
+                    return;
+                }
+                else
+                //если происходит добавление связи
+                {
+                    if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                    {
+                        FirstObject = false;
+                        SecondObject = true;
+                        First = sender;
+                        return;
+                    }
+                    else if (SecondObject)                                      //если выбран второй объект
+                    {
+                        if (First != sender)
+                        {
+                            Second = sender;
+                            int id = AddLineInDB(First, Second, TypeAssociation);
+                            AddLine(First, Second, TypeAssociation, id);
+                        }
+                    }
+                }
             }
             else
             {
+                MoveRelation(precedent.Id, false);
                 myCanvas.Children.Remove(precedent);
                 this.Cursor = Cursors.Arrow;
             }
@@ -260,6 +219,7 @@ namespace Wpf
                 {
        
                     Precedent.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
+                    MoveRelation(Precedent.Id, true);
                 }
             }
         }
@@ -293,17 +253,41 @@ namespace Wpf
             Comment.myComment comment = (Comment.myComment)sender;
             if (this.Cursor != Cursors.Cross)
             {
-                Mouse.Capture((Comment.myComment)sender);
-                InitMousePos.X = e.GetPosition(myCanvas).X;
-                InitMousePos.Y = e.GetPosition(myCanvas).Y;
+                if (!FlagArrow)
+                {
+                    Mouse.Capture(comment);                       //захватываем мышь          
+                    InitMousePos.X = e.GetPosition(myCanvas).X;
+                    InitMousePos.Y = e.GetPosition(myCanvas).Y;
 
-                InitMousePosObject.X = e.GetPosition(comment).X;
-                InitMousePosObject.Y = e.GetPosition(comment).Y;
-                isMove = true;
-                return;
+                    InitMousePosObject.X = e.GetPosition(comment).X;
+                    InitMousePosObject.Y = e.GetPosition(comment).Y;
+                    isMove = true;
+                    return;
+                }
+                else
+                //если происходит добавление связи
+                {
+                    if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                    {
+                        FirstObject = false;
+                        SecondObject = true;
+                        First = sender;
+                        return;
+                    }
+                    else if (SecondObject)                                      //если выбран второй объект
+                    {
+                        if (First != sender)
+                        {
+                            Second = sender;
+                            int id = AddLineInDB(First, Second, TypeAssociation);
+                            AddLine(First, Second, TypeAssociation, id);
+                        }
+                    }
+                }
             }
             else
             {
+                MoveRelation(comment.Id, false);
                 myCanvas.Children.Remove(comment);
                 this.Cursor = Cursors.Arrow;
             }
@@ -326,11 +310,12 @@ namespace Wpf
                 {
                     
                     Comment.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
+                    MoveRelation(Comment.Id, true);
                 }
             }
         }
         /// <summary>
-        /// Обработчик события при клике на связь
+        /// Обработчик события при клике на связь ср стрелкой
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -339,9 +324,29 @@ namespace Wpf
             ArrowLine aline = (ArrowLine)sender;
             if (this.Cursor == Cursors.Cross)
             {
+                int id = Convert.ToInt32(aline.Uid);
                 myCanvas.Children.Remove(aline);
-                //+ удаление label
-
+                if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                    myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                bred.delete_relation(id);
+                this.Cursor = Cursors.Arrow;
+            }
+        }
+        /// <summary>
+        /// Обработчик события при клике на Association
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void myline_Move_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Line line = (Line)sender;
+            if (this.Cursor == Cursors.Cross)
+            {
+                int id = Convert.ToInt32(line.Uid);
+                myCanvas.Children.Remove(line);
+                if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                    myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                bred.delete_relation(id);
                 this.Cursor = Cursors.Arrow;
             }
         }
@@ -519,7 +524,7 @@ namespace Wpf
                 FlagArrow = false;
   
                 line.Uid = id.ToString();
-                line.MouseDown += myAline_Move_MouseDown;
+                line.MouseDown += myline_Move_MouseDown;
                 myCanvas.Children.Add(line);
                 return;
             }
@@ -531,7 +536,7 @@ namespace Wpf
             {
                 TextBox.Margin = new Thickness(Math.Abs(StartPoint.X + EndPoint.X) / 2, Math.Abs(StartPoint.Y + EndPoint.Y) / 2, 0, 0);
                 TextBox.Text = "<<Extend>>";
-                TextBox.Uid = (id-65000).ToString();
+                TextBox.Uid = id.ToString();
                 aline.StrokeDashArray.Add(8.0);
                 TextBox.IsEnabled = false;
                 myCanvas.Children.Add(TextBox);
@@ -540,10 +545,11 @@ namespace Wpf
             {
                 TextBox.Margin = new Thickness(Math.Abs(StartPoint.X + EndPoint.X) / 2, Math.Abs(StartPoint.Y + EndPoint.Y) / 2, 0, 0);
                 TextBox.Text = "<<Include>>";
-                TextBox.Uid = (id - 65000).ToString();
+                TextBox.Uid = id.ToString();
                 aline.StrokeDashArray.Add(8.0);
                 TextBox.IsEnabled = false;
                 myCanvas.Children.Add(TextBox);
+                
             }
             aline.X1 = StartPoint.X;
             aline.Y1 = StartPoint.Y;
@@ -617,24 +623,34 @@ namespace Wpf
         /// <returns></returns>
         private Point[] GetMassPointActor(object Object)
         {
-            Point[] p = new Point[8];
+            Point[] p = new Point[4];
             Actor.myActor Actor = (Actor.myActor)Object;
-            p[0].X = Actor.Margin.Left;
+            //p[0].X = Actor.Margin.Left;
+            //p[1].X = Actor.Margin.Left;
+            //p[2].X = Actor.Margin.Left;
+            //p[3].X = Actor.Margin.Left + 50;
+            //p[4].X = Actor.Margin.Left + 50;
+            //p[5].X = Actor.Margin.Left + 100;
+            //p[6].X = Actor.Margin.Left + 100;
+            //p[7].X = Actor.Margin.Left + 100;
+            //p[0].Y = Actor.Margin.Top;
+            //p[1].Y = Actor.Margin.Top + 110;
+            //p[2].Y = Actor.Margin.Top + 220;
+            //p[3].Y = Actor.Margin.Top;
+            //p[4].Y = Actor.Margin.Top + 220;
+            //p[5].Y = Actor.Margin.Top;
+            //p[6].Y = Actor.Margin.Top + 110;
+            //p[7].Y = Actor.Margin.Top + 220;
+            p[0].X = Actor.Margin.Left+50;
             p[1].X = Actor.Margin.Left;
-            p[2].X = Actor.Margin.Left;
+            p[2].X = Actor.Margin.Left+100;
             p[3].X = Actor.Margin.Left + 50;
-            p[4].X = Actor.Margin.Left + 50;
-            p[5].X = Actor.Margin.Left + 100;
-            p[6].X = Actor.Margin.Left + 100;
-            p[7].X = Actor.Margin.Left + 100;
+
             p[0].Y = Actor.Margin.Top;
-            p[1].Y = Actor.Margin.Top + 110;
-            p[2].Y = Actor.Margin.Top + 220;
-            p[3].Y = Actor.Margin.Top;
-            p[4].Y = Actor.Margin.Top + 220;
-            p[5].Y = Actor.Margin.Top;
-            p[6].Y = Actor.Margin.Top + 110;
-            p[7].Y = Actor.Margin.Top + 220;
+            p[1].Y = Actor.Margin.Top + 100;
+            p[2].Y = Actor.Margin.Top + 100;
+            p[3].Y = Actor.Margin.Top+220;
+
             return p;
         }
         /// <summary>
@@ -773,6 +789,123 @@ namespace Wpf
             }
             object o = new object();
             return o;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="IdObject"></param>
+        /// <param name="MoveRemove">Если true - перемещение, false - удаление</param>
+        private void MoveRelation(int IdObject, bool MoveRemove)
+        {
+            List<int> ListIdIn = bred.get_all_relations_id_in(IdObject);
+            List<int> ListIdOut = bred.get_all_relations_id_out(IdObject);
+
+            List<int> ListRemoveId = new List<int>();   //список удаляемых объектов с указанными id
+
+            for (int i = 0; i < myCanvas.Children.Count; ++i)
+            {
+                if (myCanvas.Children[i] is ArrowLine)
+                {
+                    ArrowLine aline = (ArrowLine)myCanvas.Children[i];
+
+                    if (ListIdIn.Contains(Convert.ToInt32(aline.Uid)))
+                    {
+                        int id = Convert.ToInt32(aline.Uid);
+                        if (MoveRemove)//перемещение
+                        {
+                            myCanvas.Children.Remove(aline);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                        }
+                        else            //удаление
+                        {
+                            myCanvas.Children.Remove(aline);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            bred.delete_relation(id);
+                            i = 0;
+                            //ListRemoveId.Add(id);
+                        }
+                    }
+                    if (ListIdOut.Contains(Convert.ToInt32(aline.Uid)))
+                    {
+                        int id = Convert.ToInt32(aline.Uid);
+                        if (MoveRemove)//перемещение
+                        {
+                            myCanvas.Children.Remove(aline);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                        }
+                        else            //удаление
+                        {
+                            myCanvas.Children.Remove(aline);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            bred.delete_relation(id);
+                            i = 0;
+                            //ListRemoveId.Add(id);
+                        }
+
+                    }
+                }
+                if (myCanvas.Children[i] is Line)
+                {
+                    Line line = (Line)myCanvas.Children[i];
+                    if (ListIdIn.Contains(Convert.ToInt32(line.Uid)))
+                    {
+                        int id = Convert.ToInt32(line.Uid);
+                        if (MoveRemove)//перемещение
+                        {
+                            myCanvas.Children.Remove(line);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                        }
+                        else            //удаление
+                        {
+                            myCanvas.Children.Remove(line);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            bred.delete_relation(id);
+                            i = 0;
+                            //ListRemoveId.Add(id);
+                        }
+
+                    }
+                    if (ListIdOut.Contains(Convert.ToInt32(line.Uid)))
+                    {
+                        int id = Convert.ToInt32(line.Uid);
+                        if (MoveRemove)//перемещение
+                        {
+                            myCanvas.Children.Remove(line);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                        }
+                        else            //удаление
+                        {
+                            myCanvas.Children.Remove(line);
+                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                                myCanvas.Children.Remove((TextBox)getChildrenById(id));
+                            bred.delete_relation(id);
+                            i = 0;
+                            //ListRemoveId.Add(id);
+                        }
+
+                    }
+
+                }
+            }
+            ////удаление с канваса
+            //if (!MoveRemove)
+            //{
+            //    for (int i = 0; i < ListRemoveId.Count; ++i)
+            //    {
+            //        myCanvas.Children.Remove((TextBox)getChildrenById(ListRemoveId[i]));
+            //    }
+            //}
         }
     }
 }

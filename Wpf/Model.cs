@@ -9,65 +9,66 @@ using System.Runtime.Serialization;
 namespace Wpf
 {
     [DataContract]
+    public class Relation
+    {
+        [DataMember]
+        public int from { get; set; }
+        [DataMember]
+        public int to { get; set; }
+        [DataMember]
+        public string type { get; set; }
+
+        public Relation(int from_in, int to_in, string type_in)
+        {
+            from = from_in;
+            to = to_in;
+            type = type_in;
+        }
+    }
+
+    [DataContract]
+    public class UmlObject
+    {
+        [DataMember]
+        public int x { get; set; }
+        [DataMember]
+        public int y { get; set; }
+        [DataMember]
+        public string text { get; set; }
+        [DataMember]
+        public string type { get; set; }
+        [DataMember]
+        public Color color { get; set; }
+
+        public UmlObject()
+        {
+
+        }
+
+        public UmlObject(int x_in, int y_in, string text_in, string type_in)
+        {
+            x = x_in;
+            y = y_in;
+            text = text_in;
+            type = type_in;
+        }
+    }
+
+    [DataContract]
     public class Model
     {
-        [DataContract]
-        public class Relation
-        {
-            [DataMember]
-            public int from {get; set;}
-            [DataMember]
-            public int to {get; set;}
-            [DataMember]
-            public string type { get; set; }
-
-            public Relation(int from_in, int to_in, string type_in)
-            {
-                from = from_in;
-                to = to_in;
-                type = type_in;
-            }
-        }
-
-        [DataContract]
-        public class Uml_object
-        {
-            [DataMember]
-            public int x { get; set; }
-            [DataMember]
-            public int y { get; set; }
-            [DataMember]
-            public string text { get; set; }
-            [DataMember]
-            public string type { get; set; }
-            [DataMember]
-            public Color color { get; set; }
-
-            public Uml_object()
-            {
-
-            }
-
-            public Uml_object( int x_in, int y_in, string text_in, string type_in)
-            {
-                x = x_in;
-                y = y_in;
-                text = text_in;
-                type = type_in;
-            }
-        }
         [DataMember]
         private int max_id;
         [DataMember]
-        private SortedList <int, Uml_object> objects_list ;
+        public SortedList<int, UmlObject> objects_list { get; set; }
         [DataMember]
-        public SortedList<int, Relation> relations_list ;
+        public SortedList<int, Relation> relations_list { get; set; } 
    
         // Конструктор
         public Model()
         {
             max_id = -1;
-            objects_list = new SortedList <int, Uml_object> ();
+            objects_list = new SortedList <int, UmlObject> ();
             relations_list = new SortedList<int, Relation>();
         }
         /* 
@@ -80,7 +81,7 @@ namespace Wpf
         public int add_object(int x, int y, string text, string type)
         {
             max_id++;
-            Uml_object obj = new Uml_object(x, y, text, type);
+            UmlObject obj = new UmlObject(x, y, text, type);
             objects_list.Add(max_id, obj);  
             return max_id;   
         }
@@ -92,7 +93,7 @@ namespace Wpf
         public void edit_x_by_id(int id, int x)
         {
             //Uml_object obj = new Uml_object();
-            objects_list[id].y = x;
+            objects_list[id].x = x;
         }
         /* 
         * Изменить координату Y у объекта
@@ -192,10 +193,11 @@ namespace Wpf
         {
             relations_list.Remove(id_in);
         }
-        public void get_object_id_by_relation_id(int id)
+        public void clear()
         {
- 
+            objects_list.Clear();
+            relations_list.Clear();
+            max_id = -1;
         }
-
     }
 }

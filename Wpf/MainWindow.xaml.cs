@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace Wpf
 {
@@ -26,21 +27,22 @@ namespace Wpf
         object First;               //первый выбранный объект при добавлении связей
         object Second;
         bool isMove;
-        Model bred;
+        Model dataObject;
         String TypeAssociation;
+        Serializer datasaver;
+        bool changeColor = false;
+        Color currentColor;
         //**************************************************************************
 
         public MainWindow()
         {
-            bred = new Model();
+            dataObject = new Model();
+            datasaver = new Serializer();
             //Model bred1 = new Model();
             //int x1 = bred.add_object(1, 2, "");
             //int x2 = bred.add_object(1, 2, "");
             //bred.add_relation(x1, x2, "");
             //bred.delete_object(x1);
-            //Serializer ololo = new Serializer();
-            //ololo.SaveData("ololo.ololo", bred);
-            //bred1 = ololo.LoadData("ololo.ololo");
             InitializeComponent();
         }
         //***************************Обработчики событий*****************************
@@ -51,18 +53,21 @@ namespace Wpf
         /// <param name="e"></param>
         private void BtnActor_Click(object sender, RoutedEventArgs e)
         {
+           int id = dataObject.add_object(50, 170, "Text text text", "Actor");
+           addActorToCanvas(50, 170, id, "Text text text");
+        }
+        private void addActorToCanvas(int left, int top, int iden, string text)
+        {
             Actor.myActor actor = new Actor.myActor();
-            actor.Margin = new Thickness(50, 170, 0, 0);
-            actor.Text = "Text text text";
+            actor.Margin = new Thickness(left, top, 0, 0);
+            actor.Text = text;
             actor.Width = 100;
             actor.Height = 220;
-
-            actor.Id = bred.add_object(50, 70, "Text text text","Actor");
+            actor.Id = iden;
             myCanvas.Children.Add(actor);
             actor.MouseDown += myActor_Move_MouseDown;
             actor.MouseMove += myActor_MouseMove;
             actor.MouseUp += Object_MouseUp;
-
         }
         /// <summary>
         /// Обработчик события при клике на актере
@@ -82,7 +87,7 @@ namespace Wpf
 
                     InitMousePosObject.X = e.GetPosition(actor).X;
                     InitMousePosObject.Y = e.GetPosition(actor).Y;
-                    isMove = true;
+                    isMove = true;                   
                     return;
                 }
                 else
@@ -109,6 +114,7 @@ namespace Wpf
             else                                                                //Удаление актера
             {
                 MoveRelation(actor.Id, false);
+                dataObject.delete_object(actor.Id);
                 myCanvas.Children.Remove(actor);
                 this.Cursor = Cursors.Arrow;
             }
@@ -144,11 +150,38 @@ namespace Wpf
         /// <param name="e"></param>
         void Object_MouseUp(object sender, MouseEventArgs e)
         {
+            int id = 0;
+            int x = 0;
+            int y = 0;
+
             if (isMove)
             {
                 isMove = false;
                 Mouse.Capture(null);//освобождаем захват мыши
             }
+            if (sender is Actor.myActor)
+            {
+                Actor.myActor obj = (Actor.myActor)sender;
+                x = (int)obj.Margin.Left;
+                y = (int)obj.Margin.Top;
+                id = obj.Id;
+            }
+             else if(sender is Precedent.myPrecedent)
+             {
+                Precedent.myPrecedent obj = (Precedent.myPrecedent)sender;
+                x = (int)obj.Margin.Left;
+                y = (int)obj.Margin.Top;
+                id = obj.Id;
+            }
+            else if (sender is Comment.myComment)
+            {
+                Comment.myComment obj = (Comment.myComment)sender;
+                x = (int)obj.Margin.Left;
+                y = (int)obj.Margin.Top;
+                id = obj.Id;
+            }
+            dataObject.edit_x_by_id(id, x);
+            dataObject.edit_y_by_id(id, y); 
         }
 
         /// <summary>
@@ -161,6 +194,12 @@ namespace Wpf
             Precedent.myPrecedent precedent = (Precedent.myPrecedent)sender;
             if (this.Cursor != Cursors.Cross)
             {
+                if (changeColor == true)
+                {
+                    precedent.Color = currentColor;
+                    dataObject.edit_color_by_id(precedent.Id, precedent.Color);
+                    changeColor = false;
+                }
                 if (!FlagArrow)
                 {
                     Mouse.Capture(precedent);                       //захватываем мышь          
@@ -196,6 +235,7 @@ namespace Wpf
             else
             {
                 MoveRelation(precedent.Id, false);
+                dataObject.delete_object(precedent.Id);
                 myCanvas.Children.Remove(precedent);
                 this.Cursor = Cursors.Arrow;
             }
@@ -231,13 +271,17 @@ namespace Wpf
         /// <param name="e"></param>
         private void BtnComment_Click(object sender, RoutedEventArgs e)
         {
-
+            int id = dataObject.add_object(50, 170, "Text text text","Comment");
+            addCommentToCanvas(50, 170, id, "Text text text");
+        }
+        private void addCommentToCanvas(int left, int top, int iden, string text)
+        {
             Comment.myComment comment = new Comment.myComment();
-            comment.Margin = new Thickness(50, 170, 0, 0);
+            comment.Margin = new Thickness(left, top, 0, 0);
             comment.Width = 130;
             comment.Height = 100;
-            comment.Text = "Text text text";
-            comment.Id = bred.add_object(50, 170, "Text text text","Comment");
+            comment.Text = text;
+            comment.Id = iden;
             myCanvas.Children.Add(comment);
             comment.MouseDown += myComment_Move_MouseDown;
             comment.MouseMove += myComment_MouseMove;
@@ -288,7 +332,9 @@ namespace Wpf
             else
             {
                 MoveRelation(comment.Id, false);
+                dataObject.delete_object(comment.Id);
                 myCanvas.Children.Remove(comment);
+                
                 this.Cursor = Cursors.Arrow;
             }
         }
@@ -311,6 +357,7 @@ namespace Wpf
                     
                     Comment.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
                     MoveRelation(Comment.Id, true);
+                
                 }
             }
         }
@@ -326,9 +373,9 @@ namespace Wpf
             {
                 int id = Convert.ToInt32(aline.Uid);
                 myCanvas.Children.Remove(aline);
-                if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                     myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                bred.delete_relation(id);
+                dataObject.delete_relation(id);
                 this.Cursor = Cursors.Arrow;
             }
         }
@@ -344,9 +391,9 @@ namespace Wpf
             {
                 int id = Convert.ToInt32(line.Uid);
                 myCanvas.Children.Remove(line);
-                if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                     myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                bred.delete_relation(id);
+                dataObject.delete_relation(id);
                 this.Cursor = Cursors.Arrow;
             }
         }
@@ -357,17 +404,27 @@ namespace Wpf
         /// <param name="e"></param>
         private void BtnPrecedent_Click(object sender, RoutedEventArgs e)
         {
-
+            int id = dataObject.add_object(10, 70, "Text text text", "Precedent");
+            Color color = new Color();
+            color.R = 0;
+            color.G = 0;
+            color.B = 0;
+            dataObject.edit_color_by_id(id, color);
+            addPrecedentToCanvas(10, 70, id, "Text text text", color);
+        }
+        private void addPrecedentToCanvas(int left, int top, int iden, string text, Color color)
+        {
             Precedent.myPrecedent precedent = new Precedent.myPrecedent();
-            precedent.Margin = new Thickness(10, 70, 0, 0);
+            precedent.Id = iden;
+            precedent.Margin = new Thickness(left, top, 0, 0);
             precedent.Width = 150;
             precedent.Height = 75;
-            precedent.Text = "Text text text";
-            precedent.Id = bred.add_object(10, 70, "Text text text","Precedent");
+            precedent.Text = text;
             myCanvas.Children.Add(precedent);
             precedent.MouseDown += myPrecedent_Move_MouseDown;
             precedent.MouseMove += myPrecedent_MouseMove;
             precedent.MouseUp += Object_MouseUp;
+            precedent.Color = color;
         }
 
         /// <summary>
@@ -425,10 +482,8 @@ namespace Wpf
             colorDialog.Owner = this;
             if ((bool)colorDialog.ShowDialog())
             {
-                Precedent.myPrecedent precedent = (Precedent.myPrecedent)myCanvas.Children[0];//вот тут удали 
-                precedent.Color = colorDialog.SelectedColor;
-                //перебрать все прецеденты и изменить им цвет
-
+                currentColor = colorDialog.SelectedColor;
+                changeColor = true;
             }
         }
         /// <summary>
@@ -567,6 +622,75 @@ namespace Wpf
             aline.MouseDown += myAline_Move_MouseDown;
             myCanvas.Children.Add(aline);
             
+        }
+        private void BtnNew_Click(object sender, RoutedEventArgs e)
+        {
+            myCanvas.Children.Clear();
+            dataObject.clear();
+        }
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "Document";
+            dlg.DefaultExt = ".uuuml";
+            dlg.Filter = "Uml documents (.uuuml)|*.uuuml"; // Filter files by extension
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string filename = dlg.FileName;
+            }
+            for (int i = 0; i < myCanvas.Children.Count; ++i)
+            {
+                if (myCanvas.Children[i] is Actor.myActor)
+                {
+                    dataObject.edit_text_by_id(((Actor.myActor)myCanvas.Children[i]).Id, ((Actor.myActor)myCanvas.Children[i]).Text);
+                }
+                if (myCanvas.Children[i] is Precedent.myPrecedent)
+                {
+                    dataObject.edit_text_by_id(((Precedent.myPrecedent)myCanvas.Children[i]).Id, ((Precedent.myPrecedent)myCanvas.Children[i]).Text);
+                }
+                if (myCanvas.Children[i] is Comment.myComment)
+                {
+                    dataObject.edit_text_by_id(((Comment.myComment)myCanvas.Children[i]).Id, ((Comment.myComment)myCanvas.Children[i]).Text);
+                }
+            }
+            datasaver.SaveData(dlg.FileName, dataObject);
+        }
+
+        private void BtnLoad_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = "Document";
+            dlg.DefaultExt = ".uuuml";
+            dlg.Filter = "Text documents (.uuuml)|*.uuuml"; // Filter files by extension
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                string filename = dlg.FileName;
+            }
+            myCanvas.Children.Clear();
+            dataObject = datasaver.LoadData(dlg.FileName);
+            SortedList<int, UmlObject> objects_list = dataObject.objects_list;
+            SortedList<int, Relation> relations_list = dataObject.relations_list;
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
+            {
+                if (i.Value.type == "Actor")
+                {
+                    addActorToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text);
+                }
+                else if (i.Value.type == "Precedent")
+                {
+                    addPrecedentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text, i.Value.color);
+                }
+                else if (i.Value.type == "Comment")
+                {
+                    addCommentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text);
+                }
+            }
+            foreach (KeyValuePair<int, Relation> i in relations_list)
+            {
+                AddLine(getChildrenById(i.Value.from), getChildrenById(i.Value.to), i.Value.type, i.Key);
+            }
         }
         /// <summary>
         /// Метод добавляет обработчик события MouseMove.
@@ -732,7 +856,7 @@ namespace Wpf
             {
                 id_to = ((Comment.myComment)Second).Id;
             }
-            return bred.add_relation(id_from, id_to, type);
+            return dataObject.add_relation(id_from, id_to, type);
         }
         private object getChildrenById(int id)
         {
@@ -797,8 +921,8 @@ namespace Wpf
         /// <param name="MoveRemove">Если true - перемещение, false - удаление</param>
         private void MoveRelation(int IdObject, bool MoveRemove)
         {
-            List<int> ListIdIn = bred.get_all_relations_id_in(IdObject);
-            List<int> ListIdOut = bred.get_all_relations_id_out(IdObject);
+            List<int> ListIdIn = dataObject.get_all_relations_id_in(IdObject);
+            List<int> ListIdOut = dataObject.get_all_relations_id_out(IdObject);
 
             List<int> ListRemoveId = new List<int>();   //список удаляемых объектов с указанными id
 
@@ -814,16 +938,16 @@ namespace Wpf
                         if (MoveRemove)//перемещение
                         {
                             myCanvas.Children.Remove(aline);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                            AddLine(getChildrenById(dataObject.relations_list[id].from), getChildrenById(dataObject.relations_list[id].to), dataObject.relations_list[id].type, id);
                         }
                         else            //удаление
                         {
                             myCanvas.Children.Remove(aline);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            bred.delete_relation(id);
+                            dataObject.delete_relation(id);
                             i = 0;
                             //ListRemoveId.Add(id);
                         }
@@ -834,16 +958,16 @@ namespace Wpf
                         if (MoveRemove)//перемещение
                         {
                             myCanvas.Children.Remove(aline);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                            AddLine(getChildrenById(dataObject.relations_list[id].from), getChildrenById(dataObject.relations_list[id].to), dataObject.relations_list[id].type, id);
                         }
                         else            //удаление
                         {
                             myCanvas.Children.Remove(aline);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            bred.delete_relation(id);
+                            dataObject.delete_relation(id);
                             i = 0;
                             //ListRemoveId.Add(id);
                         }
@@ -859,16 +983,16 @@ namespace Wpf
                         if (MoveRemove)//перемещение
                         {
                             myCanvas.Children.Remove(line);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                            AddLine(getChildrenById(dataObject.relations_list[id].from), getChildrenById(dataObject.relations_list[id].to), dataObject.relations_list[id].type, id);
                         }
                         else            //удаление
                         {
                             myCanvas.Children.Remove(line);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            bred.delete_relation(id);
+                            dataObject.delete_relation(id);
                             i = 0;
                             //ListRemoveId.Add(id);
                         }
@@ -880,16 +1004,16 @@ namespace Wpf
                         if (MoveRemove)//перемещение
                         {
                             myCanvas.Children.Remove(line);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            AddLine(getChildrenById(bred.relations_list[id].from), getChildrenById(bred.relations_list[id].to), bred.relations_list[id].type, id);
+                            AddLine(getChildrenById(dataObject.relations_list[id].from), getChildrenById(dataObject.relations_list[id].to), dataObject.relations_list[id].type, id);
                         }
                         else            //удаление
                         {
                             myCanvas.Children.Remove(line);
-                            if (bred.relations_list[id].type == "Include" || bred.relations_list[id].type == "Extend")
+                            if (dataObject.relations_list[id].type == "Include" || dataObject.relations_list[id].type == "Extend")
                                 myCanvas.Children.Remove((TextBox)getChildrenById(id));
-                            bred.delete_relation(id);
+                            dataObject.delete_relation(id);
                             i = 0;
                             //ListRemoveId.Add(id);
                         }
@@ -907,5 +1031,7 @@ namespace Wpf
             //    }
             //}
         }
+
+
     }
 }

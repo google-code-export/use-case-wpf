@@ -28,18 +28,18 @@
         </Button>
         <Button Content="E" Height="23" HorizontalAlignment="Right" Margin="0,12,446,0" Name="BtnExtend" VerticalAlignment="Top" Width="28" Background="White" Click="BtnExtend_Click" ToolTip="Extend" />
         <Button Content="I" Height="23" HorizontalAlignment="Right" Margin="0,12,412,0" Name="BtnInclude" VerticalAlignment="Top" Width="28" Background="White" Click="BtnInclude_Click" ToolTip="Include" />
-        <Button Height="23" HorizontalAlignment="Left" Margin="46,12,0,0" Name="BtnLoad" VerticalAlignment="Top" Width="28" BorderThickness="0" ToolTip="Load">
+        <Button Height="23" HorizontalAlignment="Left" Margin="46,12,0,0" Name="BtnLoad" VerticalAlignment="Top" Width="28" BorderThickness="0" ToolTip="Load" Click="BtnLoad_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/LoadBtn.png" />
             </Button.Background>
         </Button>
         <Canvas Height="666" Margin="12,41,12,0" Name="myCanvas" VerticalAlignment="Top" Background="White"></Canvas>
-        <Button Height="23" HorizontalAlignment="Left" Margin="80,12,0,0" Name="BtnSave" VerticalAlignment="Top" Width="28" ToolTip="Save">
+        <Button Height="23" HorizontalAlignment="Left" Margin="80,12,0,0" Name="BtnSave" VerticalAlignment="Top" Width="28" ToolTip="Save" Click="BtnSave_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/SaveBtn.png" />
             </Button.Background>
         </Button>
-        <Button Name="BtnNew" Width="28" Margin="12,12,0,0" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" ToolTip="New">
+        <Button Name="BtnNew" Width="28" Margin="12,12,0,0" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" ToolTip="New" Click="BtnNew_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/AddBtn.png" />
             </Button.Background>

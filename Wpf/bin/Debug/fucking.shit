@@ -1,0 +1,44 @@
+﻿<Model xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Wpf">
+  <max_id>1</max_id>
+  <objects_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+      <d2p1:Key>0</d2p1:Key>
+      <d2p1:Value>
+        <color xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows.Media">
+          <d5p1:A>255</d5p1:A>
+          <d5p1:B>194</d5p1:B>
+          <d5p1:G>132</d5p1:G>
+          <d5p1:R>43</d5p1:R>
+          <d5p1:ScA>1</d5p1:ScA>
+          <d5p1:ScB>0.5394795</d5p1:ScB>
+          <d5p1:ScG>0.230740055</d5p1:ScG>
+          <d5p1:ScR>0.0241576321</d5p1:ScR>
+        </color>
+        <text>Text text text</text>
+        <type>Precedent</type>
+        <x>10</x>
+        <y>70</y>
+      </d2p1:Value>
+    </d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+    <d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+      <d2p1:Key>1</d2p1:Key>
+      <d2p1:Value>
+        <color xmlns:d5p1="http://schemas.datacontract.org/2004/07/System.Windows.Media">
+          <d5p1:A>255</d5p1:A>
+          <d5p1:B>77</d5p1:B>
+          <d5p1:G>222</d5p1:G>
+          <d5p1:R>194</d5p1:R>
+          <d5p1:ScA>1</d5p1:ScA>
+          <d5p1:ScB>0.07421357</d5p1:ScB>
+          <d5p1:ScG>0.730460763</d5p1:ScG>
+          <d5p1:ScR>0.5394795</d5p1:ScR>
+        </color>
+        <text>Text text text</text>
+        <type>Precedent</type>
+        <x>402</x>
+        <y>155</y>
+      </d2p1:Value>
+    </d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+  </objects_list>
+  <relations_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+</Model>

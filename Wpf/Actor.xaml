@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Actor.Actor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="165" d:DesignWidth="75">
+    <Grid Height="165">
+        <Image Height="100" HorizontalAlignment="Center" Name="Image" Stretch="Fill" VerticalAlignment="Top" Width="75" Margin="0,0,0,0" Source="/Wpf;component/Images/actor.JPG" />
+        <TextBox Height="65" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,100,0,0" Name="TextBox" VerticalAlignment="Top" Width="75" MaxLength="30" MaxLines="3" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Top" TextWrapping="Wrap"/>
+    </Grid>
+</UserControl>

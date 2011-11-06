@@ -6,57 +6,73 @@
     <Grid Height="739" Background="#FF8A9A8A">
 
 
-        <Button Height="23" HorizontalAlignment="Right" Margin="0,12,616,0" Name="BtnActor" VerticalAlignment="Top" Width="28" Click="BtnActor_Click" ToolTip="Actor">
+        <Button Height="40" HorizontalAlignment="Right" Margin="0,1,648,0" Name="BtnActor" VerticalAlignment="Top" Width="40" Click="BtnActor_Click" ToolTip="Actor">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/ActorBtn.jpg" />
+                <ImageBrush ImageSource="/Wpf;component/Images/ActorBtn.png" />
             </Button.Background>
         </Button>
-        <Button Height="23" HorizontalAlignment="Right" Margin="0,12,480,0" Name="BtnGeneralization" VerticalAlignment="Top" Width="28" ToolTip="Generalization" Click="BtnGeneralization_Click">
+        <Button Height="40" HorizontalAlignment="Right" Margin="0,1,464,0" Name="BtnGeneralization" VerticalAlignment="Top" Width="40" ToolTip="Generalization" Click="BtnGeneralization_Click" BorderThickness="1" Padding="1" BorderBrush="#05000000">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/GeneralizationBtn.bmp" />
+                <ImageBrush ImageSource="/Wpf;component/Images/GeneralizationBtn.png" />
             </Button.Background>
         </Button>
-        <Button Height="23" Margin="0,12,582,0" Name="BtnPrecedent" VerticalAlignment="Top" HorizontalAlignment="Right" Width="28" Click="BtnPrecedent_Click" ToolTip="Precedent">
+        <Button Height="40" Margin="0,1,602,0" Name="BtnPrecedent" VerticalAlignment="Top" HorizontalAlignment="Right" Width="40" Click="BtnPrecedent_Click" ToolTip="Precedent">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/PrecedentBtn.bmp" />
+                <ImageBrush ImageSource="/Wpf;component/Images/PrecedentBtn.png" />
             </Button.Background>
         </Button>
-        <Button Height="23" HorizontalAlignment="Right" Margin="0,12,548,0" Name="BtnComment" VerticalAlignment="Top" Width="28" Click="BtnComment_Click" ToolTip="Comment">
+        <Button Height="40" HorizontalAlignment="Right" Margin="0,1,556,0" Name="BtnComment" VerticalAlignment="Top" Width="40" Click="BtnComment_Click" ToolTip="Comment">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/NoteBtn.BMP" />
+                <ImageBrush ImageSource="/Wpf;component/Images/NoteBtn.png" />
             </Button.Background>
         </Button>
-        <Button Content="E" Height="23" HorizontalAlignment="Right" Margin="0,12,446,0" Name="BtnExtend" VerticalAlignment="Top" Width="28" Background="White" Click="BtnExtend_Click" ToolTip="Extend" />
-        <Button Content="I" Height="23" HorizontalAlignment="Right" Margin="0,12,412,0" Name="BtnInclude" VerticalAlignment="Top" Width="28" Background="White" Click="BtnInclude_Click" ToolTip="Include" />
-        <Button Height="23" HorizontalAlignment="Left" Margin="46,12,0,0" Name="BtnLoad" VerticalAlignment="Top" Width="28" BorderThickness="0" ToolTip="Load" Click="BtnLoad_Click">
+        <Button Content="E" Height="40" HorizontalAlignment="Right" Margin="0,1,418,0" Name="BtnExtend" VerticalAlignment="Top" Width="40" Click="BtnExtend_Click" ToolTip="Extend" FontSize="22" FontWeight="Normal" FontStyle="Normal">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/LoadBtn.png" />
+                <SolidColorBrush />
             </Button.Background>
         </Button>
-        <Canvas Height="666" Margin="12,41,12,0" Name="myCanvas" VerticalAlignment="Top" Background="White"></Canvas>
-        <Button Height="23" HorizontalAlignment="Left" Margin="80,12,0,0" Name="BtnSave" VerticalAlignment="Top" Width="28" ToolTip="Save" Click="BtnSave_Click">
+        <Button Content="I" Height="40" HorizontalAlignment="Right" Margin="0,1,372,0" Name="BtnInclude" VerticalAlignment="Top" Width="40
+                " Click="BtnInclude_Click" ToolTip="Include" FontSize="22">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/SaveBtn.png" />
+                <SolidColorBrush />
             </Button.Background>
         </Button>
-        <Button Name="BtnNew" Width="28" Margin="12,12,0,0" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" ToolTip="New" Click="BtnNew_Click">
+        <Button Height="40" HorizontalAlignment="Left" Margin="58,1,0,0" Name="BtnLoad" VerticalAlignment="Top" Width="41" BorderThickness="0" ToolTip="Load" Click="BtnLoad_Click">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/AddBtn.png" />
+                <ImageBrush ImageSource="/Wpf;component/Images/Load.png" />
             </Button.Background>
         </Button>
-        <Button Height="23" Margin="0,12,46,0" Name="BtnColor" VerticalAlignment="Top" Click="BtnColor_Click" ToolTip="Color precedents" HorizontalAlignment="Right" Width="28">
+        <Border x:Name="border1" Margin="12,45,12,24" BorderBrush="Black" BorderThickness="2" Background="Black" >
+        <Canvas Height="666" Name="myCanvas" VerticalAlignment="Top" Background="White"> </Canvas>
+        </Border>
+        <Button Height="40" HorizontalAlignment="Left" Margin="105,1,0,0" Name="BtnSave" VerticalAlignment="Top" Width="40" ToolTip="Save" Click="BtnSave_Click">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/ColorBtn.png" Stretch="UniformToFill" TileMode="None" />
+                <ImageBrush ImageSource="/Wpf;component/Images/Save.png" />
             </Button.Background>
         </Button>
-        <Button Height="23" Margin="0,12,12,0" Name="BtnDelete" VerticalAlignment="Top" Click="BtnDelete_Click" ToolTip="Delete object" HorizontalAlignment="Right" Width="28">
+        <Button Name="BtnNew" Width="40" Margin="12,1,0,0" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" ToolTip="New" Click="BtnNew_Click">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/BtnDelete.png" />
+                <ImageBrush ImageSource="/Wpf;component/Images/New.png" />
             </Button.Background>
         </Button>
-        <Button Height="23" HorizontalAlignment="Right" Margin="0,12,514,0" Name="BtnAssociation" ToolTip="Association" VerticalAlignment="Top" Width="28" Click="BtnAssociation_Click">
+        <Button Height="40" Margin="0,1,58,0" Name="BtnColor" VerticalAlignment="Top" Click="BtnColor_Click" ToolTip="Color precedents" HorizontalAlignment="Right" Width="40">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/AssociationBtn.bmp" />
+                <ImageBrush ImageSource="/Wpf;component/Images/Color.png" />
+            </Button.Background>
+        </Button>
+        <Button Height="40" Margin="0,1,12,0" Name="BtnDelete" VerticalAlignment="Top" Click="BtnDelete_Click" ToolTip="Delete object" HorizontalAlignment="Right" Width="40">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/DeleteBtn.png" />
+            </Button.Background>
+        </Button>
+        <Button Height="40" HorizontalAlignment="Right" Margin="0,1,510,0" Name="BtnAssociation" ToolTip="Association" VerticalAlignment="Top" Width="40" Click="BtnAssociation_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/AssociationBtn.png" />
+            </Button.Background>
+        </Button>
+        <Button Height="40" HorizontalAlignment="Left" Margin="151,1,0,0" Name="BtnSaveImage" ToolTip="Export to image" VerticalAlignment="Top" Width="40" Click="BtnSaveImage_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/SaveImage.png" />
             </Button.Background>
         </Button>
     </Grid>

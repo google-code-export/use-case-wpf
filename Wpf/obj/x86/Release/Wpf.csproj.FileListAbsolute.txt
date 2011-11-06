@@ -71,3 +71,45 @@ D:\System (C) на ONE\Мои документы\Домашняя работа\4
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\GenerateResource.write.1.tlog
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf.exe
 D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase_13_10_11\Wpf\obj\x86\Release\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\bin\Release\Wpf.exe.config
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\bin\Release\Wpf.exe
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\bin\Release\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\bin\Release\WPFColorPickerLib.dll
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\ResolveAssemblyReference.cache
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\MainWindow.baml
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\MainWindow.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\App.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Wpf_MarkupCompile.cache
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Wpf.g.resources
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Wpf.Properties.Resources.resources
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\GenerateResource.read.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\GenerateResource.write.1.tlog
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Wpf.exe
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Wpf.pdb
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Actor.baml
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Actor.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Comment.baml
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Precedent.baml
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Comment.g.cs
+D:\System (C) на ONE\Мои документы\Домашняя работа\4 курс(1 семестр)\Технология программирования\UseCase\Wpf\obj\x86\Release\Precedent.g.cs
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\bin\Release\Wpf.exe.config
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Wpf.exe
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Wpf.pdb
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\bin\Release\Wpf.exe
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\bin\Release\Wpf.pdb
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\bin\Release\WPFColorPickerLib.dll
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Actor.baml
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Comment.baml
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\MainWindow.baml
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Precedent.baml
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Actor.g.cs
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Comment.g.cs
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\MainWindow.g.cs
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Precedent.g.cs
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\App.g.cs
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Wpf_MarkupCompile.cache
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Wpf.g.resources
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\Wpf.Properties.Resources.resources
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\GenerateResource.read.1.tlog
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Release\GenerateResource.write.1.tlog

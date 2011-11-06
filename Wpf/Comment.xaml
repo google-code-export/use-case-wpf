@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Comment.Comment"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="130">
+    <Grid Background="White" OpacityMask="White">
+        <TextBox Height="84" HorizontalAlignment="Center" Name="TextBox" Width="114" Margin="4,12,0,0" VerticalAlignment="Top" MaxLength="75" MaxLines="5" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextWrapping="Wrap" Opacity="1" OpacityMask="White" />
+        <Line Name="up" X1="1" Y1="1" X2="110" Y2="1" Stroke="Black" StrokeThickness = "2" ></Line>
+        <Line Name="down" X1="1" Y1="99" X2="129" Y2="99" Stroke="Black" StrokeThickness = "2" ></Line>
+        <Line Name="left" X1="1" Y1="1" X2="1" Y2="99" Stroke="Black" StrokeThickness = "2" ></Line>
+        <Line Name="right" X1="129" Y1="19" X2="129" Y2="99" Stroke="Black" StrokeThickness = "2" ></Line>
+        <Line  X1="110" Y1="1" X2="129" Y2="19" Stroke="Black" StrokeThickness = "2" ></Line>
+        <Line  X1="110" Y1="1" X2="110" Y2="19" Stroke="Black" StrokeThickness = "2" ></Line>
+        <Line  X1="129" Y1="19" X2="110" Y2="19" Stroke="Black" StrokeThickness = "2" Opacity="1"></Line>
+    </Grid>
+</UserControl>

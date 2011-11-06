@@ -36,16 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Actor">
-      <HintPath>..\..\Actor\Actor\bin\Debug\Actor.dll</HintPath>
-    </Reference>
-    <Reference Include="Comment">
-      <HintPath>..\..\Comment\Comment\bin\Debug\Comment.dll</HintPath>
-    </Reference>
-    <Reference Include="Precedent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Precedent\Precedent\bin\Debug\Precedent.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -64,10 +54,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Actor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Comment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Actor.xaml.cs">
+      <DependentUpon>Actor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -76,12 +77,22 @@
     <Compile Include="ArrowEnds.cs" />
     <Compile Include="ArrowLineBase.cs" />
     <Compile Include="ArrowPolyline.cs" />
+    <Compile Include="Comment.xaml.cs">
+      <DependentUpon>Comment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Precedent.xaml.cs">
+      <DependentUpon>Precedent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Serializer.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Precedent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -109,34 +120,40 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\LoadBtn.png" />
+    <Resource Include="Images\GeneralizationBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\SaveBtn.png" />
+    <Resource Include="Images\PrecedentBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\AssociationBtn.bmp" />
+    <Resource Include="Images\AssociationBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\PrecedentBtn.bmp" />
+    <Resource Include="Images\Load.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\AddBtn.png" />
+    <Resource Include="Images\Save.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\NoteBtn.BMP" />
+    <Resource Include="Images\SaveImage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ActorBtn.jpg" />
+    <Resource Include="Images\ActorBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ColorBtn.png" />
+    <Resource Include="Images\NoteBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\BtnDelete.png" />
+    <Resource Include="Images\New.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\GeneralizationBtn.bmp" />
+    <Resource Include="Images\DeleteBtn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Color.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\actor.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

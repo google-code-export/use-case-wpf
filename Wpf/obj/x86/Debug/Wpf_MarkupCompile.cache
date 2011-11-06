@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\burtovoy\Desktop\UceCase\Wpf\obj\x86\Debug\
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\obj\x86\Debug\
 Wpf
 none
 false
 DEBUG;TRACE
-C:\Users\burtovoy\Desktop\UceCase\Wpf\App.xaml
-11151548125
+C:\Users\burtovoy\Desktop\UseCase_31_10_11\UseCase\Wpf\App.xaml
+4-1953860112
 
-11-1215889942
-15-1113902066
-MainWindow.xaml;
+14-16429355
+12767157579
+Actor.xaml;Comment.xaml;MainWindow.xaml;Precedent.xaml;
 
 False
 

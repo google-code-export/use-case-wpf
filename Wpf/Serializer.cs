@@ -40,5 +40,28 @@ namespace Wpf
 
             return msc;
         }
+        public string Serialize(object objectToSerialize)
+        {
+            string serialString = null;
+            using (System.IO.MemoryStream ms1 = new System.IO.MemoryStream())
+            {
+                BinaryFormatter b = new BinaryFormatter();
+                b.Serialize(ms1, objectToSerialize);
+                byte[] arrayByte = ms1.ToArray();
+                serialString = Convert.ToBase64String(arrayByte);
+            }
+            return serialString;
+        }
+        public object DeSerialize(string serializationString)
+        {
+            object deserialObject = null;
+            byte[] arrayByte = Convert.FromBase64String(serializationString);
+            using (System.IO.MemoryStream ms1 = new System.IO.MemoryStream(arrayByte))
+            {
+                BinaryFormatter b = new BinaryFormatter();
+                deserialObject = b.Deserialize(ms1);
+            }
+            return deserialObject;
+        }
     }
 }

@@ -34,5 +34,54 @@ namespace Comment
         public static DependencyProperty IdProperty = DependencyProperty.Register("Id", typeof(string), typeof(myComment));
         public int Id
         { get; set; }
+
+        public static DependencyProperty VisibilityProperty = DependencyProperty.Register("Visibility", typeof(string), typeof(myComment));
+        public Visibility Visibility
+        {
+            get {return rectangle1.Visibility ;}
+            set { rectangle1.Visibility = value;} 
+        }
+
+        public static DependencyProperty WProperty = DependencyProperty.Register("W", typeof(string), typeof(myComment));
+        public double W
+        {
+            get
+            {
+                return Width;
+            }
+            set
+            {
+                if (value >= 50)
+                {
+                    Width = value;
+                    rectangle1.Width = value - 10;
+                    rectangle2.Width = value - 20;
+                    TextBox.Width = value - 35;
+                }
+            }
+        }
+        public static DependencyProperty HProperty = DependencyProperty.Register("H", typeof(string), typeof(myComment));
+        public double H
+        {
+            get
+            {
+                return Height;
+            }
+            set
+            {
+                if (value >= 50)
+                {
+                    Height = value;
+                    rectangle1.Height = value - 10;
+                    rectangle2.Height = value - 20;
+                    TextBox.Height = value - 35;
+                }
+            }
+        }
+        public static DependencyProperty EllipProperty = DependencyProperty.Register("Ellip", typeof(string), typeof(myComment));
+        public Ellipse Ellip
+        {
+            get { return ellipse1; }
+        }
     }
 }

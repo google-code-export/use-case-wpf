@@ -7,6 +7,7 @@
              d:DesignHeight="60" d:DesignWidth="120">
     <Grid>
         <Ellipse Fill="White" Height="60" HorizontalAlignment="Left" Name="ellipse" Stroke="Black" VerticalAlignment="Top" Width="120" Focusable="True" StrokeThickness="2" AllowDrop="True" />
+        <Rectangle Height="60" HorizontalAlignment="Left" Margin="0,0,0,0" Name="rectangle1" Visibility="Hidden" Stroke="Black" VerticalAlignment="Top" Width="120" StrokeDashArray="3" />
         <TextBox Height="40" Width="81" Margin="0,9,0,0" Name="TextBox" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" MaxLength="30" MaxLines="3" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Center" TextWrapping="Wrap" Opacity="1" FontStretch="Condensed"></TextBox>
     </Grid>
 </UserControl>

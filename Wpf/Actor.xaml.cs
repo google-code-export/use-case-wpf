@@ -30,9 +30,17 @@ namespace Actor
 
             set { TextBox.Text = value; }
         }
+
         public static readonly DependencyProperty IdProperty = DependencyProperty.Register("Id", typeof(string), typeof(myActor));
         public int Id
         { get; set; }
+
+        public static DependencyProperty VisibilityProperty = DependencyProperty.Register("Visibility", typeof(string), typeof(myActor));
+        public Visibility Visibility
+        {
+            get { return rectangle1.Visibility; }
+            set { rectangle1.Visibility = value; }
+        }
 
     }
 }

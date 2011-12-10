@@ -39,6 +39,12 @@ namespace Wpf
         public string type { get; set; }
         [DataMember]
         public Color color { get; set; }
+        [DataMember]
+        public double widht { get; set; }
+        [DataMember]
+        public double height { get; set; }
+
+        public bool selected { get; set; }
 
         public UmlObject()
         {
@@ -51,6 +57,7 @@ namespace Wpf
             y = y_in;
             text = text_in;
             type = type_in;
+            selected = false;
         }
     }
 
@@ -62,13 +69,13 @@ namespace Wpf
         [DataMember]
         public SortedList<int, UmlObject> objects_list { get; set; }
         [DataMember]
-        public SortedList<int, Relation> relations_list { get; set; } 
-   
+        public SortedList<int, Relation> relations_list { get; set; }
+
         // Конструктор
         public Model()
         {
             max_id = -1;
-            objects_list = new SortedList <int, UmlObject> ();
+            objects_list = new SortedList<int, UmlObject>();
             relations_list = new SortedList<int, Relation>();
         }
         /* 
@@ -82,14 +89,15 @@ namespace Wpf
         {
             max_id++;
             UmlObject obj = new UmlObject(x, y, text, type);
-            objects_list.Add(max_id, obj);  
-            return max_id;   
+            objects_list.Add(max_id, obj);
+
+            return max_id;
         }
-         /* 
-         * Изменить координату x у объекта
-         * @x - координата
-         * @id - изменяемый объект
-        */
+        /* 
+        * Изменить координату x у объекта
+        * @x - координата
+        * @id - изменяемый объект
+       */
         public void edit_x_by_id(int id, int x)
         {
             //Uml_object obj = new Uml_object();
@@ -122,6 +130,16 @@ namespace Wpf
         {
             objects_list[id].color = color;
         }
+
+        public void edit_selected_by_id(int id, bool value)
+        {
+            objects_list[id].selected = value;
+        }
+        public bool check_selected(int id)
+        {
+            return objects_list[id].selected;
+        }
+
         /* Вернуть id связей которые входят в объект
          * @id - объект
          * @return List<int> список айдишников которые входят в объект
@@ -193,11 +211,57 @@ namespace Wpf
         {
             relations_list.Remove(id_in);
         }
+
+        public void edit_zoom_by_id(int id, double w, double h)
+        {
+            objects_list[id].widht = w;
+            objects_list[id].height = h;
+        }
+
         public void clear()
         {
             objects_list.Clear();
             relations_list.Clear();
             max_id = -1;
+        }
+        public void reset_flags()
+        {
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
+            {
+                i.Value.selected = false;
+            }
+        }
+        public void clear_for_copy()
+        {
+            List<int> ids_list = new List<int>();
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
+            {
+                if (!i.Value.selected)
+                {
+                    ids_list.Add(i.Key);
+                }
+            }
+            foreach (int i in ids_list)
+            {
+                delete_object(i);
+            }
+
+        }
+        /// <summary>
+        /// 123456789765432
+        /// </summary>
+        /// <returns></returns>
+        public List<int> get_selected_ids()
+        {
+            List<int> ids = new List<int>();
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
+            {
+                if (i.Value.selected)
+                {
+                    ids.Add(i.Key);
+                }
+            }
+            return ids;
         }
     }
 }

@@ -4,15 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="130">
-    <Grid Background="White" OpacityMask="White">
-        <TextBox Height="84" HorizontalAlignment="Center" Name="TextBox" Width="114" Margin="4,12,0,0" VerticalAlignment="Top" MaxLength="75" MaxLines="5" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextWrapping="Wrap" Opacity="1" OpacityMask="White" />
-        <Line Name="up" X1="1" Y1="1" X2="110" Y2="1" Stroke="Black" StrokeThickness = "2" ></Line>
-        <Line Name="down" X1="1" Y1="99" X2="129" Y2="99" Stroke="Black" StrokeThickness = "2" ></Line>
-        <Line Name="left" X1="1" Y1="1" X2="1" Y2="99" Stroke="Black" StrokeThickness = "2" ></Line>
-        <Line Name="right" X1="129" Y1="19" X2="129" Y2="99" Stroke="Black" StrokeThickness = "2" ></Line>
-        <Line  X1="110" Y1="1" X2="129" Y2="19" Stroke="Black" StrokeThickness = "2" ></Line>
-        <Line  X1="110" Y1="1" X2="110" Y2="19" Stroke="Black" StrokeThickness = "2" ></Line>
-        <Line  X1="129" Y1="19" X2="110" Y2="19" Stroke="Black" StrokeThickness = "2" Opacity="1"></Line>
+             d:DesignHeight="110"
+             d:DesignWidth="140"
+             Width="140"
+             Height="110"
+             MinWidth="50"
+             MinHeight="50"
+             >
+    <Grid  Background="Transparent" >
+
+        <TextBox Height="75" HorizontalAlignment="Center" Name="TextBox" Width="105" Margin="5,15,0,0" VerticalAlignment="Top" MaxLength="140"  FontSize="10.5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" TextWrapping="Wrap" Opacity="1" OpacityMask="White" Grid.RowSpan="2" BorderThickness="0" DataContext="{Binding}" />
+
+        <Rectangle Height="100" HorizontalAlignment="Left" Margin="7,4,0,0" Name="rectangle1" Visibility="Hidden" Stroke="Black" VerticalAlignment="Top" Width="130" StrokeDashArray="3" />
+        <Rectangle Height="90" HorizontalAlignment="Left" Margin="12,8,0,0" Name="rectangle2" Stroke="Black" StrokeThickness="2" VerticalAlignment="Top" Width="120" />
+        <Ellipse Height="7" HorizontalAlignment="Right" Margin="0,0,7,10" Name="ellipse1" Stroke="Black" VerticalAlignment="Bottom" Width="7" Fill="Black"  />
+        <Image Height="20" HorizontalAlignment="Right" Margin="0,8,8,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="20
+               " Source="/Wpf;component/Images/comment.png" />
     </Grid>
 </UserControl>

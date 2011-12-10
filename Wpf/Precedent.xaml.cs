@@ -51,6 +51,13 @@ namespace Precedent
         public int Id
         { get; set; }
 
+        public static DependencyProperty VisibilityProperty = DependencyProperty.Register("Visibility", typeof(string), typeof(myPrecedent));
+        public Visibility Visibility
+        {
+            get { return rectangle1.Visibility; }
+            set { rectangle1.Visibility = value; }
+        }
+
         //public static readonly MouseButtonEventArgs MouseDownEvent = EventManager.RegisterRoutedEvent("MouseDown", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(myPrecedent));
 
         //public event RoutedEventHandler MouseDown

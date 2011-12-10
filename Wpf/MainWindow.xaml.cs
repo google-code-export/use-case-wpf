@@ -12,6 +12,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using System.Globalization;
+
 
 namespace Wpf
 {
@@ -30,16 +32,29 @@ namespace Wpf
         bool isMove;
         Model dataObject;
         String TypeAssociation;
-        Serializer datasaver;
+        Serializer dataSaver;
         bool changeColor = false;
         Color currentColor;
+        List<int> SelectedObjcet;
+        int currentId = 0;
+        int maxId = 0;
+        bool ZoomFlag = false;
+        bool AltFlag = false;
+        bool CtrlFlag = false;
+        bool ShiftFlag = false;
+        bool SelectingZone = false;
+        Point StartZonePoint;
+        Rectangle selectedZone = new Rectangle();
         //**************************************************************************
 
         public MainWindow()
         {
+            
             dataObject = new Model();
-            datasaver = new Serializer();
+            dataSaver = new Serializer();
             InitializeComponent();
+            Directory.CreateDirectory("log");
+            dataSaver.SaveData("log/0",dataObject);
         }
         //***************************Обработчики событий*****************************
         /// <summary>
@@ -49,21 +64,31 @@ namespace Wpf
         /// <param name="e"></param>
         private void BtnActor_Click(object sender, RoutedEventArgs e)
         {
-           int id = dataObject.add_object(50, 170, "Text", "Actor");
-           addActorToCanvas(50, 170, id, "Text");
+            int id = dataObject.add_object(50, 170, "Text", "Actor");
+            addActorToCanvas(50, 170, id, "Text");
+            IncStatus();
         }
+
+
         private void addActorToCanvas(int left, int top, int iden, string text)
         {
             Actor.myActor actor = new Actor.myActor();
-            actor.Margin = new Thickness(left, top, 0, 0);
+
+            //actor.Margin = new Thickness(left, top, 0, 0);
+            Canvas.SetLeft(actor, left);
+            Canvas.SetTop(actor, top);
+
             actor.Text = text;
             actor.Width = 75;
             actor.Height = 165;
             actor.Id = iden;
+
+
             myCanvas.Children.Add(actor);
             actor.MouseDown += myActor_Move_MouseDown;
             actor.MouseMove += myActor_MouseMove;
             actor.MouseUp += Object_MouseUp;
+
         }
         /// <summary>
         /// Обработчик события при клике на актере
@@ -72,48 +97,61 @@ namespace Wpf
         /// <param name="e"></param>
         void myActor_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            
             Actor.myActor actor = (Actor.myActor)sender;
-            if (this.Cursor != Cursors.Cross)
+            if (AltFlag)
             {
-                if (!FlagArrow)
-                {
-                    Mouse.Capture(actor);                       //захватываем мышь          
-                    InitMousePos.X = e.GetPosition(myCanvas).X;
-                    InitMousePos.Y = e.GetPosition(myCanvas).Y;
+                int id = dataObject.add_object(Convert.ToInt32(e.GetPosition(myCanvas).X-e.GetPosition(actor).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(actor).Y), actor.Text, "Actor");
+                addActorToCanvas(Convert.ToInt32(e.GetPosition(myCanvas).X-e.GetPosition(actor).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(actor).Y), id, actor.Text);
+                IncStatus();
+                
+            }
+            
 
-                    InitMousePosObject.X = e.GetPosition(actor).X;
-                    InitMousePosObject.Y = e.GetPosition(actor).Y;
-                    isMove = true;                   
-                    return;
-                }
-                else
-                //если происходит добавление связи
+                SelectObject(actor);
+                if (this.Cursor != Cursors.Cross)
                 {
-                    if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                    if (!FlagArrow)
                     {
-                        FirstObject = false;
-                        SecondObject = true;
-                        First = sender;
+                        Mouse.Capture(actor);                       //захватываем мышь          
+                        InitMousePos.X = e.GetPosition(myCanvas).X;
+                        InitMousePos.Y = e.GetPosition(myCanvas).Y;
+
+                        InitMousePosObject.X = e.GetPosition(actor).X;
+                        InitMousePosObject.Y = e.GetPosition(actor).Y;
+                        isMove = true;
                         return;
                     }
-                    else if (SecondObject)                                      //если выбран второй объект
+                    else
+                    //если происходит добавление связи
                     {
-                        if(First!=sender)
+                        if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
                         {
-                            Second = sender;
-                            int id = AddLineInDB(First, Second,TypeAssociation);
-                            AddLine(First, Second, TypeAssociation, id);
+                            FirstObject = false;
+                            SecondObject = true;
+                            First = sender;
+                            return;
+                        }
+                        else if (SecondObject)                                      //если выбран второй объект
+                        {
+                            if (First != sender)
+                            {
+                                Second = sender;
+                                int id = AddLineInDB(First, Second, TypeAssociation);
+                                AddLine(First, Second, TypeAssociation, id);
+                                IncStatus();
+                            }
                         }
                     }
                 }
-            }
-            else                                                                //Удаление актера
-            {
-                MoveRelation(actor.Id, false);
-                dataObject.delete_object(actor.Id);
-                myCanvas.Children.Remove(actor);
-                this.Cursor = Cursors.Arrow;
-            }
+                else                                                                //Удаление актера
+                {
+                    MoveRelation(actor.Id, false);
+                    dataObject.delete_object(actor.Id);
+                    myCanvas.Children.Remove(actor);
+                    this.Cursor = Cursors.Arrow;
+                }
+            
         }
         /// <summary>
         /// Обработчик события перемещения актера 
@@ -133,7 +171,10 @@ namespace Wpf
                     && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
                     //меняем позицию актера
-                    Actor.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
+                    Canvas.SetLeft(Actor, e.GetPosition(myCanvas).X - InitMousePosObject.X);
+                    Canvas.SetTop(Actor, e.GetPosition(myCanvas).Y - InitMousePosObject.Y);
+
+                    //Actor.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
                     //Переместить все связанные связи
                     MoveRelation(Actor.Id, true);
                 }
@@ -146,38 +187,50 @@ namespace Wpf
         /// <param name="e"></param>
         void Object_MouseUp(object sender, MouseEventArgs e)
         {
+            //Если флаг = true, то сохраняем все выделенные элементы в массив 
+            //Флаг = false
+
             int id = 0;
             int x = 0;
             int y = 0;
+
 
             if (isMove)
             {
                 isMove = false;
                 Mouse.Capture(null);//освобождаем захват мыши
+
+                if (sender is Actor.myActor)
+                {
+                    Actor.myActor obj = (Actor.myActor)sender;
+                    x = (int)obj.Margin.Left;
+                    y = (int)obj.Margin.Top;
+                    id = obj.Id;
+                }
+                else if (sender is Precedent.myPrecedent)
+                {
+                    Precedent.myPrecedent obj = (Precedent.myPrecedent)sender;
+                    x = (int)obj.Margin.Left;
+                    y = (int)obj.Margin.Top;
+                    id = obj.Id;
+                }
+                else if (sender is Comment.myComment)
+                {
+                    if (ZoomFlag)
+                    {
+                        ZoomFlag = false;
+                        Mouse.Capture(null);//освобождаем захват мыши
+                    }
+                    Comment.myComment obj = (Comment.myComment)sender;
+                    x = (int)obj.Margin.Left;
+                    y = (int)obj.Margin.Top;
+                    id = obj.Id;
+                }
+                dataObject.edit_x_by_id(id, x);
+                dataObject.edit_y_by_id(id, y);
+                IncStatus();
             }
-            if (sender is Actor.myActor)
-            {
-                Actor.myActor obj = (Actor.myActor)sender;
-                x = (int)obj.Margin.Left;
-                y = (int)obj.Margin.Top;
-                id = obj.Id;
-            }
-             else if(sender is Precedent.myPrecedent)
-             {
-                Precedent.myPrecedent obj = (Precedent.myPrecedent)sender;
-                x = (int)obj.Margin.Left;
-                y = (int)obj.Margin.Top;
-                id = obj.Id;
-            }
-            else if (sender is Comment.myComment)
-            {
-                Comment.myComment obj = (Comment.myComment)sender;
-                x = (int)obj.Margin.Left;
-                y = (int)obj.Margin.Top;
-                id = obj.Id;
-            }
-            dataObject.edit_x_by_id(id, x);
-            dataObject.edit_y_by_id(id, y); 
+            
         }
 
         /// <summary>
@@ -188,6 +241,14 @@ namespace Wpf
         void myPrecedent_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Precedent.myPrecedent precedent = (Precedent.myPrecedent)sender;
+            if (AltFlag)
+            {
+                int id = dataObject.add_object(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(precedent).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(precedent).Y), precedent.Text, "Precedent");
+                addPrecedentToCanvas(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(precedent).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(precedent).Y), id, precedent.Text,precedent.Color);
+                IncStatus();
+
+            }
+            SelectObject(precedent);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if (this.Cursor != Cursors.Cross)
             {
                 if (changeColor == true)
@@ -195,6 +256,7 @@ namespace Wpf
                     precedent.Color = currentColor;
                     dataObject.edit_color_by_id(precedent.Id, precedent.Color);
                     changeColor = false;
+                    IncStatus();
                 }
                 if (!FlagArrow)
                 {
@@ -253,7 +315,10 @@ namespace Wpf
                     && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
        
-                    Precedent.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
+                    //Precedent.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
+                    Canvas.SetLeft(Precedent, e.GetPosition(myCanvas).X - InitMousePosObject.X);
+                    Canvas.SetTop(Precedent, e.GetPosition(myCanvas).Y - InitMousePosObject.Y);
+
                     MoveRelation(Precedent.Id, true);
                 }
             }
@@ -267,20 +332,83 @@ namespace Wpf
         private void BtnComment_Click(object sender, RoutedEventArgs e)
         {
             int id = dataObject.add_object(50, 170, "Text","Comment");
-            addCommentToCanvas(50, 170, id, "Text");
+            addCommentToCanvas(50, 170, id, "Text", 140, 110);
+            IncStatus();
         }
-        private void addCommentToCanvas(int left, int top, int iden, string text)
+        private void addCommentToCanvas(int left, int top, int iden, string text, double width, double height)
         {
+
             Comment.myComment comment = new Comment.myComment();
-            comment.Margin = new Thickness(left, top, 0, 0);
-            comment.Width = 130;
-            comment.Height = 100;
+            //comment.Margin = new Thickness(left, top, 0, 0);
+            Canvas.SetLeft(comment, left);
+            Canvas.SetTop(comment, top);
             comment.Text = text;
             comment.Id = iden;
+            comment.W = width;
+            comment.H = height;
             myCanvas.Children.Add(comment);
             comment.MouseDown += myComment_Move_MouseDown;
             comment.MouseMove += myComment_MouseMove;
             comment.MouseUp += Object_MouseUp;
+            comment.Ellip.MouseDown += commentZoomClick;
+            comment.MouseEnter += commentHelp;
+            comment.MouseLeave += commentCloseHelp;
+
+        }
+        /// <summary>
+        /// Удаление подсказки комментария
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void commentCloseHelp(object sender, MouseEventArgs e)
+        {
+            Comment.myComment comment = (Comment.myComment)sender;
+            comment.ToolTip = null;
+
+        }
+        /// <summary>
+        /// Подсказка комментария
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
+        void commentHelp(object sender, MouseEventArgs e)
+        {
+            Comment.myComment comment = (Comment.myComment)sender;
+            
+            String text = comment.Text;
+            Typeface myTypeface = new Typeface("Helvetica");
+            FormattedText ft = new FormattedText(text, CultureInfo.CurrentCulture, 
+            FlowDirection.LeftToRight, myTypeface, 16, Brushes.Red);
+            
+            if (comment.TextBox.Width*comment.TextBox.Height < ft.Width*11)
+            {
+
+               
+                ToolTip tp = new System.Windows.Controls.ToolTip();
+                string str = "";
+                tp.Content = text;
+                for (int i = 0; i < text.Length; i+=20)
+                {
+                    if (text.Length >= i + 20)
+                    {
+                        str += text.Substring(i, 20);
+                        str += System.Environment.NewLine;
+                    }
+                    else str += text.Substring(i);
+                }
+                    //tp.Width = 150;
+                    //tp.Content = "First line" + System.Environment.NewLine + "Second line";
+                
+                comment.ToolTip = str;
+                
+                
+            }
+        }
+        void commentZoomClick(object sender, MouseButtonEventArgs e)
+        {
+         
+            ZoomFlag = true;
         }
         /// <summary>
         /// Обработчик события при клике на комментарий
@@ -289,46 +417,65 @@ namespace Wpf
         /// <param name="e"></param>
         void myComment_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            // Если зажат ctrl или shift
+                //Если объект выделен, то снять выделение
+                //Если объект не выделен, то выделить его
+                
+            // Иначе очищаем выделение и выделяем объект
+
             Comment.myComment comment = (Comment.myComment)sender;
+            if (AltFlag)
+            {
+                int id = dataObject.add_object(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(comment).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(comment).Y), comment.Text, "Comment");
+                addCommentToCanvas(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(comment).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(comment).Y), id, comment.Text, comment.W, comment.H);
+                IncStatus();
+
+            }
+            SelectObject(comment);
             if (this.Cursor != Cursors.Cross)
             {
-                if (!FlagArrow)
+                if (!ZoomFlag)
                 {
-                    Mouse.Capture(comment);                       //захватываем мышь          
-                    InitMousePos.X = e.GetPosition(myCanvas).X;
-                    InitMousePos.Y = e.GetPosition(myCanvas).Y;
-                    InitMousePosObject.X = e.GetPosition(comment).X;
-                    InitMousePosObject.Y = e.GetPosition(comment).Y;
-                    isMove = true;
-                    return;
-                }
-                else
-                //если происходит добавление связи
-                {
-                    if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                    if (!FlagArrow)
                     {
-                        FirstObject = false;
-                        SecondObject = true;
-                        First = sender;
+                        Mouse.Capture(comment);                       //захватываем мышь          
+                        InitMousePos.X = e.GetPosition(myCanvas).X;
+                        InitMousePos.Y = e.GetPosition(myCanvas).Y;
+                        InitMousePosObject.X = e.GetPosition(comment).X;
+                        InitMousePosObject.Y = e.GetPosition(comment).Y;
+                        isMove = true;
                         return;
                     }
-                    else if (SecondObject)                                      //если выбран второй объект
+                    else
+                    //если происходит добавление связи
                     {
-                        if (First != sender)
+                        if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
                         {
-                            Second = sender;
-                            int id = AddLineInDB(First, Second, TypeAssociation);
-                            AddLine(First, Second, TypeAssociation, id);
+                            FirstObject = false;
+                            SecondObject = true;
+                            First = sender;
+                            return;
+                        }
+                        else if (SecondObject)                                      //если выбран второй объект
+                        {
+                            if (First != sender)
+                            {
+                                Second = sender;
+                                int id = AddLineInDB(First, Second, TypeAssociation);
+                                AddLine(First, Second, TypeAssociation, id);
+                            }
                         }
                     }
                 }
+                else
+                    Mouse.Capture(comment);  
             }
             else
             {
                 MoveRelation(comment.Id, false);
                 dataObject.delete_object(comment.Id);
                 myCanvas.Children.Remove(comment);
-                
+
                 this.Cursor = Cursors.Arrow;
             }
         }
@@ -339,17 +486,31 @@ namespace Wpf
         /// <param name="e"></param>
         void myComment_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isMove)
+            var Comment = (Comment.myComment)sender;
+            if (ZoomFlag)
             {
-                var Comment = (Comment.myComment)sender;
-                double mouseX = e.GetPosition(myCanvas).X, mouseY = e.GetPosition(myCanvas).Y;
-                Point currentPoint = e.GetPosition(myCanvas);
-                if ((mouseX > InitMousePosObject.X) && (mouseX < myCanvas.ActualWidth - (Comment.Width - InitMousePosObject.X)) && (mouseY > InitMousePosObject.Y) && (mouseY < myCanvas.ActualHeight - (Comment.Height - InitMousePosObject.Y))
-                    && Math.Abs(currentPoint.X - InitMousePos.X) > SystemParameters.MinimumHorizontalDragDistance
-                    && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
+                Comment.W = e.GetPosition(Comment).X+10;
+                Comment.H = e.GetPosition(Comment).Y+10;
+                dataObject.edit_zoom_by_id(Comment.Id, Comment.W, Comment.H);
+                
+                //Comment.Width = 
+            }
+            else
+            {
+                if (isMove)
                 {
-                    Comment.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
-                    MoveRelation(Comment.Id, true);
+                    
+                    double mouseX = e.GetPosition(myCanvas).X, mouseY = e.GetPosition(myCanvas).Y;
+                    Point currentPoint = e.GetPosition(myCanvas);
+                    if ((mouseX > InitMousePosObject.X) && (mouseX < myCanvas.ActualWidth - (Comment.Width - InitMousePosObject.X)) && (mouseY > InitMousePosObject.Y) && (mouseY < myCanvas.ActualHeight - (Comment.Height - InitMousePosObject.Y))
+                        && Math.Abs(currentPoint.X - InitMousePos.X) > SystemParameters.MinimumHorizontalDragDistance
+                        && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
+                    {
+                        //Comment.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
+                        Canvas.SetLeft(Comment, e.GetPosition(myCanvas).X - InitMousePosObject.X);
+                        Canvas.SetTop(Comment, e.GetPosition(myCanvas).Y - InitMousePosObject.Y);
+                        MoveRelation(Comment.Id, true);
+                    }
                 }
             }
         }
@@ -403,12 +564,16 @@ namespace Wpf
             color.B = 0;
             dataObject.edit_color_by_id(id, color);
             addPrecedentToCanvas(10, 70, id, "Text", color);
+            IncStatus();
         }
         private void addPrecedentToCanvas(int left, int top, int iden, string text, Color color)
         {
             Precedent.myPrecedent precedent = new Precedent.myPrecedent();
             precedent.Id = iden;
-            precedent.Margin = new Thickness(left, top, 0, 0);
+            //precedent.Margin = new Thickness(left, top, 0, 0);
+            Canvas.SetLeft(precedent, left);
+            Canvas.SetTop(precedent, top);
+
             precedent.Width = 120;
             precedent.Height = 60;
             precedent.Text = text;
@@ -495,10 +660,34 @@ namespace Wpf
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
-            {
                 this.Cursor = Cursors.Arrow;
-            }
+            if (e.Key == Key.System)
+                AltFlag = true;
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+                CtrlFlag = true;
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+                ShiftFlag = true;
         }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Directory.Delete("log", true);
+        }
+        /// <summary>
+        /// Отжате кнопок
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.System)
+                AltFlag = false;
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+                CtrlFlag = false;
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+                ShiftFlag = false;
+            
+        }
+
         /// <summary>
         /// Сохранение в .png
         /// </summary>
@@ -513,6 +702,174 @@ namespace Wpf
                 ExportToPng(dlg.FileName, myCanvas);
 
         }
+        /// <summary>
+        /// Zoom in
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            myCanvas.Width += 100;
+            myCanvas.Height += 100;
+        }
+        /// <summary>
+        /// Zoom out
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            if (myCanvas.Height > 666)
+            {
+                myCanvas.Width -= 100;
+                myCanvas.Height -= 100;
+            }
+        }
+        /// <summary>
+        /// Нажатие кнопки мыши на канвасе
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void myCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!(CtrlFlag || ShiftFlag || isMove))
+            {
+                ResetAllSelected();
+                dataObject.reset_flags();
+            }
+            if (!isMove&&!ZoomFlag)
+            {
+                // Если не зажат Ctrl или Shift то снять выделение
+                // Начальные координаты прямоугольника + флаг рисования области
+
+                StartZonePoint = e.GetPosition(myCanvas);
+                Mouse.Capture(myCanvas);
+                SelectingZone = true;
+
+                selectedZone = new Rectangle
+                {
+                    Opacity = 0.2,
+                    Fill = Brushes.LightBlue,
+                    Stroke = Brushes.LightBlue,
+                    StrokeThickness = 2
+                };
+                Canvas.SetLeft(selectedZone, StartZonePoint.X);
+                Canvas.SetTop(selectedZone, StartZonePoint.X);
+                myCanvas.Children.Add(selectedZone);
+            }
+            
+        }
+        /// <summary>
+        /// Перемещение мышки по канвасу
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void myCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (SelectingZone)
+            {
+                if (e.LeftButton == MouseButtonState.Released || selectedZone == null)
+                    return;
+
+                var pos = e.GetPosition(myCanvas);
+
+                var x = Math.Min(pos.X, StartZonePoint.X);
+                var y = Math.Min(pos.Y, StartZonePoint.Y);
+
+                var w = Math.Max(pos.X, StartZonePoint.X) - x;
+                var h = Math.Max(pos.Y, StartZonePoint.Y) - y;
+
+                selectedZone.Width = w;
+                selectedZone.Height = h;
+
+                Canvas.SetLeft(selectedZone, x);
+                Canvas.SetTop(selectedZone, y);
+            }
+        }
+        /// <summary>
+        /// Отжатие кнопки мыши
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void myCanvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            //Если флаг = true, то сохраняем все выделенные элементы в массив 
+            //Флаг = false
+            ZoomFlag = false;
+            if (SelectingZone)
+            {
+                
+                for (int i = 0; i < myCanvas.Children.Count; i++)
+                {
+                    Rect rect = new Rect();
+                    rect.X = Canvas.GetLeft(myCanvas.Children[i]);
+                    rect.Y = Canvas.GetTop(myCanvas.Children[i]);
+                    rect.Width = myCanvas.Children[i].RenderSize.Width;
+                    rect.Height = myCanvas.Children[i].RenderSize.Height;
+                    Quadrilateral redQuad = new Quadrilateral(rect);
+                    rect.X = Canvas.GetLeft(selectedZone);
+                    rect.Y = Canvas.GetTop(selectedZone);
+                    rect.Width = selectedZone.Width;
+                    rect.Height = selectedZone.Height;
+                    Quadrilateral greenQuad = new Quadrilateral(rect);
+                    if (IntersectionTest.CheckRectRectIntersection(redQuad, greenQuad) && rect.Width > 0)
+                    {
+                        SelectObject(myCanvas.Children[i]);
+                    }
+                }
+                SelectingZone = false;
+                myCanvas.Children.Remove(selectedZone);
+                
+                
+            }
+            Mouse.Capture(null);
+        }
+
+
+
+        /// <summary>
+        /// Undo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnUndo_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (currentId > 0)
+            {
+                BtnRedo.IsEnabled = true;
+                currentId--;
+                ShowInCanvas("log/" + currentId.ToString());
+                if(currentId==0)
+                    BtnUndo.IsEnabled = false;
+            }
+            else
+            {
+                BtnUndo.IsEnabled = false;
+            }
+        }
+        /// <summary>
+        /// Redo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnRedo_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentId < maxId)
+            {
+                BtnUndo.IsEnabled = true;
+                currentId++;
+                ShowInCanvas("log/" + currentId.ToString());
+                if (currentId == maxId)
+                    BtnRedo.IsEnabled = false;
+            }
+            else
+            {
+                BtnRedo.IsEnabled = false;
+            }
+        }
+
+
         //**************************************************************************
 
 
@@ -617,12 +974,18 @@ namespace Wpf
             FlagArrow = false;
             aline.MouseDown += myAline_Move_MouseDown;
             myCanvas.Children.Add(aline);
+      
             
         }
         private void BtnNew_Click(object sender, RoutedEventArgs e)
         {
             myCanvas.Children.Clear();
             dataObject.clear();
+            Directory.Delete("log",true);
+            Directory.CreateDirectory("log");
+            dataSaver.SaveData("log/0", dataObject);
+            maxId = 0;
+            currentId = 0;
         }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -645,7 +1008,7 @@ namespace Wpf
                         dataObject.edit_text_by_id(((Comment.myComment)myCanvas.Children[i]).Id, ((Comment.myComment)myCanvas.Children[i]).Text);
                     }
                 }
-                datasaver.SaveData(dlg.FileName, dataObject);
+                dataSaver.SaveData(dlg.FileName, dataObject);
             }
         }
 
@@ -659,29 +1022,11 @@ namespace Wpf
                 string str = dlg.FileName.Remove(0, index+1);
                 if (str == "usd")
                 {
-                    myCanvas.Children.Clear();
-                    dataObject = datasaver.LoadData(dlg.FileName);
-                    SortedList<int, UmlObject> objects_list = dataObject.objects_list;
-                    SortedList<int, Relation> relations_list = dataObject.relations_list;
-                    foreach (KeyValuePair<int, UmlObject> i in objects_list)
-                    {
-                        if (i.Value.type == "Actor")
-                        {
-                            addActorToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text);
-                        }
-                        else if (i.Value.type == "Precedent")
-                        {
-                            addPrecedentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text, i.Value.color);
-                        }
-                        else if (i.Value.type == "Comment")
-                        {
-                            addCommentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text);
-                        }
-                    }
-                    foreach (KeyValuePair<int, Relation> i in relations_list)
-                    {
-                        AddLine(getChildrenById(i.Value.from), getChildrenById(i.Value.to), i.Value.type, i.Key);
-                    }
+                    File.Copy(dlg.FileName, "log/0", true);
+                    currentId = 0;
+                    maxId = 0;
+
+                    ShowInCanvas(dlg.FileName);
                 }
                 else
                 {
@@ -690,28 +1035,34 @@ namespace Wpf
             }
 
         }
-        /// <summary>
-        /// Метод добавляет обработчик события MouseMove.
-        /// </summary>
-        /// <param name="Object">Объект, к которому добавляется обработчик события</param>
-        private void AddMove(object Object)
+
+        private void ShowInCanvas(string str)
         {
-            if (Object is Actor.myActor)
+            myCanvas.Children.Clear();
+            dataObject = dataSaver.LoadData(str);
+            SortedList<int, UmlObject> objects_list = dataObject.objects_list;
+            SortedList<int, Relation> relations_list = dataObject.relations_list;
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
             {
-                Actor.myActor actor = (Actor.myActor)Object;
-                actor.MouseMove += myActor_MouseMove;
+                if (i.Value.type == "Actor")
+                {
+                    addActorToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text);
+                }
+                else if (i.Value.type == "Precedent")
+                {
+                    addPrecedentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text, i.Value.color);
+                }
+                else if (i.Value.type == "Comment")
+                {
+                    addCommentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text, i.Value.widht, i.Value.height);
+                }
             }
-            if (Object is Precedent.myPrecedent)
+            foreach (KeyValuePair<int, Relation> i in relations_list)
             {
-                Precedent.myPrecedent precedent = (Precedent.myPrecedent)Object;
-                precedent.MouseMove += myPrecedent_MouseMove;
-            }
-            if (Object is Comment.myComment)
-            {
-                Comment.myComment comment = (Comment.myComment)Object;
-                comment.MouseMove += myComment_MouseMove;
+                AddLine(getChildrenById(i.Value.from), getChildrenById(i.Value.to), i.Value.type, i.Key);
             }
         }
+
         /// <summary>
         /// Метод, ищущий минимальное расстояние мужду точкой StartPoint и точками из массива p
         /// </summary>
@@ -747,14 +1098,14 @@ namespace Wpf
         {
             var p = new Point[4];
             var actor = (Actor.myActor)Object;
-            p[0].X = actor.Margin.Left + 37.5;
-            p[1].X = actor.Margin.Left + 5;
-            p[2].X = actor.Margin.Left + 70;
-            p[3].X = actor.Margin.Left + 37.5;
-            p[0].Y = actor.Margin.Top;
-            p[1].Y = actor.Margin.Top + 32;
-            p[2].Y = actor.Margin.Top + 32;
-            p[3].Y = actor.Margin.Top + 100;
+            p[0].X = Canvas.GetLeft(actor) + 37.5;
+            p[1].X = Canvas.GetLeft(actor) + 5;
+            p[2].X = Canvas.GetLeft(actor) + 70;
+            p[3].X = Canvas.GetLeft(actor) + 37.5;
+            p[0].Y = Canvas.GetTop(actor);
+            p[1].Y = Canvas.GetTop(actor) + 32;
+            p[2].Y = Canvas.GetTop(actor) + 32;
+            p[3].Y = Canvas.GetTop(actor) + 100;
 
             return p;
         }
@@ -767,44 +1118,44 @@ namespace Wpf
         {
             var p = new Point[8];
             var precedent = (Precedent.myPrecedent)Object;
-            p[0].X = precedent.Margin.Left;
-            p[1].X = precedent.Margin.Left + 30;
-            p[2].X = precedent.Margin.Left + 30;
-            p[3].X = precedent.Margin.Left + 60;
-            p[4].X = precedent.Margin.Left + 60;
-            p[5].X = precedent.Margin.Left + 90;
-            p[6].X = precedent.Margin.Left + 90;
-            p[7].X = precedent.Margin.Left + 120;
-            p[0].Y = precedent.Margin.Top + 30;
-            p[1].Y = precedent.Margin.Top + 3;
-            p[2].Y = precedent.Margin.Top + 57;
-            p[3].Y = precedent.Margin.Top;
-            p[4].Y = precedent.Margin.Top + 60;
-            p[5].Y = precedent.Margin.Top + 3;
-            p[6].Y = precedent.Margin.Top + 57;
-            p[7].Y = precedent.Margin.Top + 30;
+            p[0].X = Canvas.GetLeft(precedent);
+            p[1].X = Canvas.GetLeft(precedent) + 30;
+            p[2].X = Canvas.GetLeft(precedent) + 30;
+            p[3].X = Canvas.GetLeft(precedent) + 60;
+            p[4].X = Canvas.GetLeft(precedent) + 60;
+            p[5].X = Canvas.GetLeft(precedent) + 90;
+            p[6].X = Canvas.GetLeft(precedent) + 90;
+            p[7].X = Canvas.GetLeft(precedent) + 120;
+            p[0].Y = Canvas.GetTop(precedent) + 30;
+            p[1].Y = Canvas.GetTop(precedent) + 3;
+            p[2].Y = Canvas.GetTop(precedent) + 57;
+            p[3].Y = Canvas.GetTop(precedent);
+            p[4].Y = Canvas.GetTop(precedent) + 60;
+            p[5].Y = Canvas.GetTop(precedent) + 3;
+            p[6].Y = Canvas.GetTop(precedent) + 57;
+            p[7].Y = Canvas.GetTop(precedent) + 30;
             return p;
         }
         private Point[] GetMassPointComment(object Object)
         {
             var p = new Point[8];
             var comment = (Comment.myComment)Object;
-            p[0].X = comment.Margin.Left;
-            p[1].X = comment.Margin.Left;
-            p[2].X = comment.Margin.Left;
-            p[3].X = comment.Margin.Left + 65;
-            p[4].X = comment.Margin.Left + 65;
-            p[5].X = comment.Margin.Left + 125;
-            p[6].X = comment.Margin.Left + 130;
-            p[7].X = comment.Margin.Left + 130;
-            p[0].Y = comment.Margin.Top;
-            p[1].Y = comment.Margin.Top + 50;
-            p[2].Y = comment.Margin.Top + 100;
-            p[3].Y = comment.Margin.Top;
-            p[4].Y = comment.Margin.Top + 100;
-            p[5].Y = comment.Margin.Top + 5;
-            p[6].Y = comment.Margin.Top + 50;
-            p[7].Y = comment.Margin.Top + 100;
+            p[0].X = Canvas.GetLeft(comment) + 10;
+            p[1].X = Canvas.GetLeft(comment) + 10;
+            p[2].X = Canvas.GetLeft(comment) + 10;
+            p[3].X = Canvas.GetLeft(comment) + comment.W / 2;
+            p[4].X = Canvas.GetLeft(comment) + comment.W / 2;
+            p[5].X = Canvas.GetLeft(comment) + comment.W - 20;
+            p[6].X = Canvas.GetLeft(comment) + comment.W - 10;
+            p[7].X = Canvas.GetLeft(comment) + comment.W - 10;
+            p[0].Y = Canvas.GetTop(comment) + 10;
+            p[1].Y = Canvas.GetTop(comment) + comment.H / 2 - 10;
+            p[2].Y = Canvas.GetTop(comment) + comment.H - 10;
+            p[3].Y = Canvas.GetTop(comment) + 10;
+            p[4].Y = Canvas.GetTop(comment) + comment.H - 10;
+            p[5].Y = Canvas.GetTop(comment) + 20;
+            p[6].Y = Canvas.GetTop(comment) + comment.H / 2 - 10;
+            p[7].Y = Canvas.GetTop(comment) + comment.H - 10;
             return p;
         }
         private int AddLineInDB(object First, object Second, string type)
@@ -1040,6 +1391,110 @@ namespace Wpf
             canvas.Margin = oldMargin;
             canvas.LayoutTransform = transform;
         }
+
+        public void SelectObject(object obj)
+        {       
+            
+            if (obj is Actor.myActor)
+            {
+                Actor.myActor actor = (Actor.myActor)obj;
+                if (actor.Visibility == Visibility.Visible && (CtrlFlag||ShiftFlag))
+                {
+                    actor.Visibility = Visibility.Hidden;
+                    dataObject.edit_selected_by_id(actor.Id, false);
+                }
+                else 
+                {
+                    if (!(CtrlFlag || ShiftFlag|| SelectingZone ))
+                    {
+                        ResetAllSelected();
+                        dataObject.reset_flags();
+                    }
+                    actor.Visibility = Visibility.Visible;
+                    dataObject.edit_selected_by_id(actor.Id, true);
+                }
+            }
+            if (obj is Precedent.myPrecedent)
+            {
+                Precedent.myPrecedent precedent = (Precedent.myPrecedent)obj;
+                if (precedent.Visibility == Visibility.Visible && (CtrlFlag || ShiftFlag))
+                {
+                    precedent.Visibility = Visibility.Hidden;
+                    dataObject.edit_selected_by_id(precedent.Id, false);
+                }
+                else
+                {
+                    if (!(CtrlFlag || ShiftFlag))
+                    {
+                        ResetAllSelected();
+                        dataObject.reset_flags();
+                    }
+                    precedent.Visibility = Visibility.Visible;
+                    dataObject.edit_selected_by_id(precedent.Id, true);
+                }
+            }
+            if (obj is Comment.myComment)
+            {
+                Comment.myComment comment = (Comment.myComment)obj;
+                if (comment.Visibility == Visibility.Visible && (CtrlFlag || ShiftFlag))
+                {
+                    comment.Visibility = Visibility.Hidden;
+                    dataObject.edit_selected_by_id(comment.Id, false);
+                }
+                else
+                {
+                    if (!(CtrlFlag || ShiftFlag))
+                    {
+                        ResetAllSelected();
+                        dataObject.reset_flags();
+                    }
+                    comment.Visibility = Visibility.Visible;
+                    dataObject.edit_selected_by_id(comment.Id, true);
+                }
+            }
+        }
+
+        private void ResetAllSelected()
+        {
+            List<int> ids = dataObject.get_selected_ids();
+            foreach (var i in ids)
+            {
+                object objToReset = getChildrenById(i);
+
+                if (objToReset is Actor.myActor)
+                {
+                    Actor.myActor a;
+                    a = (Actor.myActor)objToReset;
+                    a.Visibility = Visibility.Hidden;
+                }
+                if (objToReset is Precedent.myPrecedent)
+                {
+                    Precedent.myPrecedent p;
+                    p = (Precedent.myPrecedent)objToReset;
+                    p.Visibility = Visibility.Hidden;
+                }
+                if (objToReset is Comment.myComment)
+                {
+                    Comment.myComment c;
+                    c = (Comment.myComment)objToReset;
+                    c.Visibility = Visibility.Hidden;
+                }
+            }
+        }
+        private void IncStatus()
+        {
+            BtnUndo.IsEnabled = true;
+            BtnRedo.IsEnabled = false;
+            currentId++;
+            maxId = currentId;
+            dataSaver.SaveData("log/" + currentId.ToString(), dataObject);
+        }
+
+
+
+
+
+
 
     }
 }

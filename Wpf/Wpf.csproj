@@ -80,6 +80,7 @@
     <Compile Include="Comment.xaml.cs">
       <DependentUpon>Comment.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IntersectionTest.cs" />
     <Compile Include="Precedent.xaml.cs">
       <DependentUpon>Precedent.xaml</DependentUpon>
     </Compile>
@@ -154,6 +155,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\actor.JPG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\zoom-in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\zoom-out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BtnRedo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BtnUndo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\comment.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

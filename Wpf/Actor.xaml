@@ -6,7 +6,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="165" d:DesignWidth="75">
     <Grid Height="165">
-        <Image Height="100" HorizontalAlignment="Center" Name="Image" Stretch="Fill" VerticalAlignment="Top" Width="75" Margin="0,0,0,0" Source="/Wpf;component/Images/actor.JPG" />
-        <TextBox Height="65" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,100,0,0" Name="TextBox" VerticalAlignment="Top" Width="75" MaxLength="30" MaxLines="3" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Top" TextWrapping="Wrap"/>
+        <Image Height="100" HorizontalAlignment="Center" Name="Image" Stretch="Fill" VerticalAlignment="Top" Width="75" Margin="0,5,0,0" Source="/Wpf;component/Images/actor.JPG" />
+        <Rectangle Height="101" HorizontalAlignment="Left" Margin="5,2,0,0" Name="rectangle1" Visibility="Hidden" Stroke="Black" VerticalAlignment="Top" Width="65" StrokeDashArray="3" />
+        
+        <TextBox Height="62" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Margin="0,103,0,0" Name="TextBox" VerticalAlignment="Top" Width="75" MaxLength="30" MaxLines="3" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Top" TextWrapping="Wrap"/>
     </Grid>
 </UserControl>

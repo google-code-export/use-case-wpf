@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/generalizationbtn.bmp")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/comment.png")]
 
 

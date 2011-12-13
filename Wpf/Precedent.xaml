@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="60" d:DesignWidth="120">
+             d:DesignHeight="80" d:DesignWidth="150">
     <Grid>
-        <Ellipse Fill="White" Height="60" HorizontalAlignment="Left" Name="ellipse" Stroke="Black" VerticalAlignment="Top" Width="120" Focusable="True" StrokeThickness="2" AllowDrop="True" />
-        <Rectangle Height="60" HorizontalAlignment="Left" Margin="0,0,0,0" Name="rectangle1" Visibility="Hidden" Stroke="Black" VerticalAlignment="Top" Width="120" StrokeDashArray="3" />
-        <TextBox Height="40" Width="81" Margin="0,9,0,0" Name="TextBox" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" MaxLength="30" MaxLines="3" BorderThickness="0" FontSize="10.5" VerticalContentAlignment="Center" TextWrapping="Wrap" Opacity="1" FontStretch="Condensed"></TextBox>
+        <Ellipse Fill="White" Height="80" HorizontalAlignment="Left" Name="ellipse" Stroke="Black" VerticalAlignment="Top" Width="150" Focusable="True" StrokeThickness="2" AllowDrop="True" />
+        <Rectangle HorizontalAlignment="Left" Name="rectangle1" Visibility="Hidden" Stroke="Black" Width="150" StrokeDashArray="3" />
+        <TextBox Height="50" Width="100" Margin="23,15,23,0" Name="TextBox" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" MaxLength="50" MaxLines="3" BorderThickness="0" FontSize="10" VerticalContentAlignment="Center" TextWrapping="Wrap" Opacity="1" FontStretch="Condensed"></TextBox>
     </Grid>
 </UserControl>

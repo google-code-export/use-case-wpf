@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         
         Title="Use Case" Height="758" Width="1070" KeyDown="Window_KeyDown" ResizeMode="CanResize" MinWidth="1070" MinHeight="758" Closed="Window_Closed" KeyUp="Window_KeyUp">
-    <Grid Height="739" Background="#FF8A9A8A">
+    <Grid  Background="#FF8A9A8A">
 
 
         <Button Height="40" HorizontalAlignment="Right" Margin="0,1,648,0" Name="BtnActor" VerticalAlignment="Top" Width="40" Click="BtnActor_Click" ToolTip="Actor">
@@ -57,12 +57,12 @@
                 <ImageBrush ImageSource="/Wpf;component/Images/New.png" />
             </Button.Background>
         </Button>
-        <Button Height="40" Margin="0,1,58,0" Name="BtnColor" VerticalAlignment="Top" Click="BtnColor_Click" ToolTip="Color precedents" HorizontalAlignment="Right" Width="40">
+        <Button Height="40" Margin="0,0,107,0" Name="BtnColor" VerticalAlignment="Top" Click="BtnColor_Click" ToolTip="Color precedents" HorizontalAlignment="Right" Width="40">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/Color.png" />
             </Button.Background>
         </Button>
-        <Button Height="40" Margin="0,1,12,0" Name="BtnDelete" VerticalAlignment="Top" Click="BtnDelete_Click" ToolTip="Delete object" HorizontalAlignment="Right" Width="40">
+        <Button Height="40" Margin="0,0,61,0" Name="BtnDelete" VerticalAlignment="Top" Click="BtnDelete_Click" ToolTip="Delete object" HorizontalAlignment="Right" Width="40">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/DeleteBtn.png" />
             </Button.Background>
@@ -77,24 +77,29 @@
                 <ImageBrush ImageSource="/Wpf;component/Images/SaveImage.png" />
             </Button.Background>
         </Button>
-        <Button Height="40" HorizontalAlignment="Right" Margin="0,1,104,0" Name="BtnZoomOut" ToolTip="Color precedents" VerticalAlignment="Top" Width="40" Click="BtnZoomOut_Click">
+        <Button Height="40" HorizontalAlignment="Right" Margin="0,0,153,0" Name="BtnZoomOut" ToolTip="Color precedents" VerticalAlignment="Top" Width="40" Click="BtnZoomOut_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/zoom-out.png" />
             </Button.Background>
         </Button>
-        <Button Height="40" HorizontalAlignment="Right" Margin="0,0,150,0" Name="BtnZoomIn" ToolTip="Color precedents" VerticalAlignment="Top" Width="40" Click="BtnZoomIn_Click">
+        <Button Height="40" HorizontalAlignment="Right" Margin="0,-1,199,0" Name="BtnZoomIn" ToolTip="Color precedents" VerticalAlignment="Top" Width="40" Click="BtnZoomIn_Click">
             <Button.Background>
                 <ImageBrush ImageSource="/Wpf;component/Images/zoom-in.png" />
             </Button.Background>
         </Button>
-        <Button Height="40" HorizontalAlignment="Left" Margin="197,0,0,0" Name="BtnUndo" ToolTip="Export to image" VerticalAlignment="Top" Width="40" Click="BtnUndo_Click" IsEnabled="False">
+        <Button Height="40" HorizontalAlignment="Left" Margin="197,0,0,0" Name="BtnUndo" ToolTip="Undo" VerticalAlignment="Top" Width="40" Click="BtnUndo_Click" IsEnabled="True">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/BtnUndo.png" />
+                <ImageBrush ImageSource="/Wpf;component/Images/BtnUndoNotActive.png" />
             </Button.Background>
         </Button>
-        <Button Height="40" HorizontalAlignment="Left" Margin="243,0,0,0" Name="BtnRedo" ToolTip="Export to image" VerticalAlignment="Top" Width="40" Click="BtnRedo_Click" IsEnabled="False">
+        <Button Height="40" HorizontalAlignment="Left" Margin="243,0,0,0" Name="BtnRedo" ToolTip="Redo" VerticalAlignment="Top" Width="40" Click="BtnRedo_Click" IsEnabled="True">
             <Button.Background>
-                <ImageBrush ImageSource="/Wpf;component/Images/BtnRedo.png" />
+                <ImageBrush ImageSource="Images/BtnRedoNotActive.png" />
+            </Button.Background>
+        </Button>
+        <Button Height="40" IsEnabled="True" Name="BtnQuestion" ToolTip="Question" Width="40" Margin="0,-1,15,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BtnQuestion_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="/Wpf;component/Images/BtnQuestion.png" />
             </Button.Background>
         </Button>
     </Grid>

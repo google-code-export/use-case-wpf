@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
 using System.Globalization;
-
+using System.Threading;
 
 namespace Wpf
 {
@@ -74,7 +74,7 @@ namespace Wpf
         {
             Actor.myActor actor = new Actor.myActor();
 
-            //actor.Margin = new Thickness(left, top, 0, 0);
+ 
             Canvas.SetLeft(actor, left);
             Canvas.SetTop(actor, top);
 
@@ -97,61 +97,57 @@ namespace Wpf
         /// <param name="e"></param>
         void myActor_Move_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
             Actor.myActor actor = (Actor.myActor)sender;
+
             if (AltFlag)
             {
-                int id = dataObject.add_object(Convert.ToInt32(e.GetPosition(myCanvas).X-e.GetPosition(actor).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(actor).Y), actor.Text, "Actor");
-                addActorToCanvas(Convert.ToInt32(e.GetPosition(myCanvas).X-e.GetPosition(actor).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(actor).Y), id, actor.Text);
+                int id = dataObject.add_object(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(actor).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(actor).Y), actor.Text, "Actor");
+                addActorToCanvas(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(actor).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(actor).Y), id, actor.Text);
                 IncStatus();
-                
+
             }
-            
 
-                SelectObject(actor);
-                if (this.Cursor != Cursors.Cross)
+
+            SelectObject(actor);
+
+            if (!FlagArrow)
+            {
+                Mouse.Capture(actor);                       //захватываем мышь          
+                InitMousePos.X = e.GetPosition(myCanvas).X;
+                InitMousePos.Y = e.GetPosition(myCanvas).Y;
+
+                InitMousePosObject.X = e.GetPosition(actor).X;
+                InitMousePosObject.Y = e.GetPosition(actor).Y;
+                isMove = true;
+                return;
+            }
+            else
+            //если происходит добавление связи
+            {
+
+                if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
                 {
-                    if (!FlagArrow)
-                    {
-                        Mouse.Capture(actor);                       //захватываем мышь          
-                        InitMousePos.X = e.GetPosition(myCanvas).X;
-                        InitMousePos.Y = e.GetPosition(myCanvas).Y;
 
-                        InitMousePosObject.X = e.GetPosition(actor).X;
-                        InitMousePosObject.Y = e.GetPosition(actor).Y;
-                        isMove = true;
-                        return;
-                    }
-                    else
-                    //если происходит добавление связи
+                    FirstObject = false;
+                    SecondObject = true;
+                    First = sender;
+                    return;
+                }
+                else if (SecondObject)                                      //если выбран второй объект
+                {
+                    if (First != sender)
                     {
-                        if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
-                        {
-                            FirstObject = false;
-                            SecondObject = true;
-                            First = sender;
-                            return;
-                        }
-                        else if (SecondObject)                                      //если выбран второй объект
-                        {
-                            if (First != sender)
-                            {
-                                Second = sender;
-                                int id = AddLineInDB(First, Second, TypeAssociation);
-                                AddLine(First, Second, TypeAssociation, id);
-                                IncStatus();
-                            }
-                        }
+                        SecondObject = false;
+                        Second = sender;
+
+                        int id = AddLineInDB(First, Second, TypeAssociation);
+                        AddLine(First, Second, TypeAssociation, id);
+                        IncStatus();
                     }
                 }
-                else                                                                //Удаление актера
-                {
-                    MoveRelation(actor.Id, false);
-                    dataObject.delete_object(actor.Id);
-                    myCanvas.Children.Remove(actor);
-                    this.Cursor = Cursors.Arrow;
-                }
-            
+            }
+
         }
         /// <summary>
         /// Обработчик события перемещения актера 
@@ -203,15 +199,15 @@ namespace Wpf
                 if (sender is Actor.myActor)
                 {
                     Actor.myActor obj = (Actor.myActor)sender;
-                    x = (int)obj.Margin.Left;
-                    y = (int)obj.Margin.Top;
+                    x = (int)Canvas.GetLeft(obj);
+                    y = (int)Canvas.GetTop(obj);
                     id = obj.Id;
                 }
                 else if (sender is Precedent.myPrecedent)
                 {
                     Precedent.myPrecedent obj = (Precedent.myPrecedent)sender;
-                    x = (int)obj.Margin.Left;
-                    y = (int)obj.Margin.Top;
+                    x = (int)Canvas.GetLeft(obj);
+                    y = (int)Canvas.GetTop(obj);
                     id = obj.Id;
                 }
                 else if (sender is Comment.myComment)
@@ -220,16 +216,18 @@ namespace Wpf
                     {
                         ZoomFlag = false;
                         Mouse.Capture(null);//освобождаем захват мыши
+                        
                     }
                     Comment.myComment obj = (Comment.myComment)sender;
-                    x = (int)obj.Margin.Left;
-                    y = (int)obj.Margin.Top;
+                    x = (int)Canvas.GetLeft(obj);
+                    y = (int)Canvas.GetTop(obj);
                     id = obj.Id;
                 }
                 dataObject.edit_x_by_id(id, x);
                 dataObject.edit_y_by_id(id, y);
                 IncStatus();
             }
+            
             
         }
 
@@ -244,13 +242,13 @@ namespace Wpf
             if (AltFlag)
             {
                 int id = dataObject.add_object(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(precedent).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(precedent).Y), precedent.Text, "Precedent");
+                dataObject.edit_color_by_id(id,precedent.Color);
                 addPrecedentToCanvas(Convert.ToInt32(e.GetPosition(myCanvas).X - e.GetPosition(precedent).X), Convert.ToInt32(e.GetPosition(myCanvas).Y - e.GetPosition(precedent).Y), id, precedent.Text,precedent.Color);
                 IncStatus();
 
             }
             SelectObject(precedent);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            if (this.Cursor != Cursors.Cross)
-            {
+
                 if (changeColor == true)
                 {
                     precedent.Color = currentColor;
@@ -272,31 +270,28 @@ namespace Wpf
                 else
                 //если происходит добавление связи
                 {
-                    if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                   if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
+                {
+
+                    FirstObject = false;
+                    SecondObject = true;
+                    First = sender;
+                    return;
+                }
+                else if (SecondObject)                                      //если выбран второй объект
+                {
+                    if (First != sender)
                     {
-                        FirstObject = false;
-                        SecondObject = true;
-                        First = sender;
-                        return;
-                    }
-                    else if (SecondObject)                                      //если выбран второй объект
-                    {
-                        if (First != sender)
-                        {
-                            Second = sender;
-                            int id = AddLineInDB(First, Second, TypeAssociation);
-                            AddLine(First, Second, TypeAssociation, id);
-                        }
+                        SecondObject = false;
+                        Second = sender;
+
+                        int id = AddLineInDB(First, Second, TypeAssociation);
+                        AddLine(First, Second, TypeAssociation, id);
+                        IncStatus();
                     }
                 }
-            }
-            else
-            {
-                MoveRelation(precedent.Id, false);
-                dataObject.delete_object(precedent.Id);
-                myCanvas.Children.Remove(precedent);
-                this.Cursor = Cursors.Arrow;
-            }
+                }
+
         }
         /// <summary>
         /// Обработчик события перемещения прецедента
@@ -432,8 +427,7 @@ namespace Wpf
 
             }
             SelectObject(comment);
-            if (this.Cursor != Cursors.Cross)
-            {
+
                 if (!ZoomFlag)
                 {
                     if (!FlagArrow)
@@ -451,6 +445,7 @@ namespace Wpf
                     {
                         if (FirstObject)                                            //если это первый выбранный объект (от которого проводится стрелка)
                         {
+
                             FirstObject = false;
                             SecondObject = true;
                             First = sender;
@@ -460,24 +455,19 @@ namespace Wpf
                         {
                             if (First != sender)
                             {
+                                SecondObject = false;
                                 Second = sender;
+
                                 int id = AddLineInDB(First, Second, TypeAssociation);
                                 AddLine(First, Second, TypeAssociation, id);
+                                IncStatus();
                             }
                         }
                     }
                 }
                 else
                     Mouse.Capture(comment);  
-            }
-            else
-            {
-                MoveRelation(comment.Id, false);
-                dataObject.delete_object(comment.Id);
-                myCanvas.Children.Remove(comment);
 
-                this.Cursor = Cursors.Arrow;
-            }
         }
         /// <summary>
         /// Обработчик события перемещения комментария
@@ -492,8 +482,8 @@ namespace Wpf
                 Comment.W = e.GetPosition(Comment).X+10;
                 Comment.H = e.GetPosition(Comment).Y+10;
                 dataObject.edit_zoom_by_id(Comment.Id, Comment.W, Comment.H);
-                
-                //Comment.Width = 
+                MoveRelation(Comment.Id, true);
+               
             }
             else
             {
@@ -506,7 +496,6 @@ namespace Wpf
                         && Math.Abs(currentPoint.X - InitMousePos.X) > SystemParameters.MinimumHorizontalDragDistance
                         && Math.Abs(currentPoint.Y - InitMousePos.Y) > SystemParameters.MinimumVerticalDragDistance)
                     {
-                        //Comment.Margin = new Thickness(e.GetPosition(myCanvas).X - InitMousePosObject.X, e.GetPosition(myCanvas).Y - InitMousePosObject.Y, 0, 0);
                         Canvas.SetLeft(Comment, e.GetPosition(myCanvas).X - InitMousePosObject.X);
                         Canvas.SetTop(Comment, e.GetPosition(myCanvas).Y - InitMousePosObject.Y);
                         MoveRelation(Comment.Id, true);
@@ -570,12 +559,11 @@ namespace Wpf
         {
             Precedent.myPrecedent precedent = new Precedent.myPrecedent();
             precedent.Id = iden;
-            //precedent.Margin = new Thickness(left, top, 0, 0);
             Canvas.SetLeft(precedent, left);
             Canvas.SetTop(precedent, top);
 
-            precedent.Width = 120;
-            precedent.Height = 60;
+            precedent.Width = 150;
+            precedent.Height = 80;
             precedent.Text = text;
             myCanvas.Children.Add(precedent);
             precedent.MouseDown += myPrecedent_Move_MouseDown;
@@ -667,6 +655,80 @@ namespace Wpf
                 CtrlFlag = true;
             if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
                 ShiftFlag = true;
+            if (e.Key == Key.Delete)
+            {
+                List<int> allSelected = dataObject.get_selected_ids();
+                foreach (int i in allSelected)
+                {
+                    MoveRelation(i, false);
+                    dataObject.delete_object(i);
+                    myCanvas.Children.Remove((UIElement)getChildrenById(i));
+                }
+                IncStatus();
+            }
+            if (CtrlFlag && e.Key == Key.C)
+            {
+                Model copy = new Model();
+                copy = (Model)dataObject.DeepClone(dataObject);
+                
+                copy.clear_for_copy();
+                Clipboard.SetData("CustomerFormat", copy);
+                copy.clear();
+            }
+            if (CtrlFlag && e.Key == Key.X)
+            {
+                Model copy = new Model();
+                copy = (Model)dataObject.DeepClone(dataObject);
+                copy.clear_for_copy();
+                Clipboard.SetData("CustomerFormat", copy);
+                copy.clear();
+
+                List<int> allSelected = dataObject.get_selected_ids();
+                foreach (int i in allSelected)
+                {
+                    MoveRelation(i, false);
+                    dataObject.delete_object(i);
+                    myCanvas.Children.Remove((UIElement)getChildrenById(i));
+                }
+                IncStatus();
+
+            }
+            if (CtrlFlag && e.Key == Key.V)
+            {
+                Model CopyModel = new Model();
+                if (Clipboard.ContainsData("CustomerFormat"))
+                {
+                    CopyModel = Clipboard.GetData("CustomerFormat") as Model;
+                    CopyModel.editIds(dataObject.max_id+1);
+                    
+                    ResetAllSelected();
+                    dataObject.reset_flags();
+                    dataObject.merge(CopyModel);
+                    ShowInCanvas(CopyModel);
+                    List <int> newSelectedIds = dataObject.get_selected_ids();
+                    foreach (int i in newSelectedIds)
+                    {
+                        SelectObject(getChildrenById(i));
+                    }
+                    IncStatus();
+                }
+            }
+            if (CtrlFlag && e.Key == Key.A)
+            {
+                for (int i = 0; i < myCanvas.Children.Count; ++i)
+                {
+                    SelectObject(myCanvas.Children[i]);
+                }
+                dataObject.select_all_flags();
+            }
+            if (CtrlFlag && e.Key == Key.Z)
+            {
+                Undo();
+            }
+            if (CtrlFlag && e.Key == Key.Y)
+            {
+                Redo();
+            }
         }
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -685,7 +747,6 @@ namespace Wpf
                 CtrlFlag = false;
             if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
                 ShiftFlag = false;
-            
         }
 
         /// <summary>
@@ -700,7 +761,6 @@ namespace Wpf
             bool? result = dlg.ShowDialog();
             if (result.Value)
                 ExportToPng(dlg.FileName, myCanvas);
-
         }
         /// <summary>
         /// Zoom in
@@ -711,6 +771,8 @@ namespace Wpf
         {
             myCanvas.Width += 100;
             myCanvas.Height += 100;
+            dataObject.widght = myCanvas.Width;
+            dataObject.height = myCanvas.Height;
         }
         /// <summary>
         /// Zoom out
@@ -723,6 +785,8 @@ namespace Wpf
             {
                 myCanvas.Width -= 100;
                 myCanvas.Height -= 100;
+                dataObject.widght = myCanvas.Width;
+                dataObject.widght = myCanvas.Height;
             }
         }
         /// <summary>
@@ -732,11 +796,11 @@ namespace Wpf
         /// <param name="e"></param>
         private void myCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (!(CtrlFlag || ShiftFlag || isMove))
-            {
-                ResetAllSelected();
-                dataObject.reset_flags();
-            }
+                if (!(CtrlFlag || ShiftFlag || isMove))
+                {
+                    ResetAllSelected();
+                    dataObject.reset_flags();
+                }
             if (!isMove&&!ZoomFlag)
             {
                 // Если не зажат Ctrl или Shift то снять выделение
@@ -759,6 +823,23 @@ namespace Wpf
             }
             
         }
+
+        private void ClearBlyadoLines()
+        {
+            List<UIElement> forDel = new List<UIElement>();
+            foreach (UIElement i in myCanvas.Children)
+            {
+                if (i.Uid == "-1")
+                {
+                    forDel.Add(i);
+                }
+            }
+            for (int i = 0; i < forDel.Count; i++)
+            {
+                myCanvas.Children.Remove((UIElement)getChildrenById(-1));
+                
+            }
+        }
         /// <summary>
         /// Перемещение мышки по канвасу
         /// </summary>
@@ -766,6 +847,26 @@ namespace Wpf
         /// <param name="e"></param>
         private void myCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            ClearBlyadoLines();
+            if (SecondObject)
+            {
+
+                    Point[] PEnd = new Point[4];
+
+                    PEnd[0].X = e.GetPosition(myCanvas).X - 5;
+                    PEnd[0].Y = e.GetPosition(myCanvas).Y ;
+                    PEnd[1].X = e.GetPosition(myCanvas).X + 5;
+                    PEnd[1].Y = e.GetPosition(myCanvas).Y;
+                    PEnd[2].X = e.GetPosition(myCanvas).X;
+                    PEnd[2].Y = e.GetPosition(myCanvas).Y - 5;
+                    PEnd[3].X = e.GetPosition(myCanvas).X ;
+                    PEnd[3].Y = e.GetPosition(myCanvas).Y + 5 ;
+
+                    MinimumDistance(GetPointStart(First), PEnd);
+                    DrawLine(TypeAssociation, -1, true);
+               
+ 
+            }
             if (SelectingZone)
             {
                 if (e.LeftButton == MouseButtonState.Released || selectedZone == null)
@@ -795,7 +896,11 @@ namespace Wpf
         {
             //Если флаг = true, то сохраняем все выделенные элементы в массив 
             //Флаг = false
-            ZoomFlag = false;
+            if (ZoomFlag)
+            {
+                ZoomFlag = false;
+                IncStatus();
+            }
             if (SelectingZone)
             {
                 
@@ -834,18 +939,41 @@ namespace Wpf
         /// <param name="e"></param>
         private void BtnUndo_Click(object sender, RoutedEventArgs e)
         {
-            
+
+            Undo();
+        }
+
+        private void Undo()
+        {
             if (currentId > 0)
             {
-                BtnRedo.IsEnabled = true;
+                //BtnRedo.IsEnabled = true;
+                ImageBrush myBrush = new ImageBrush();
+                string packUri = "pack://application:,,,/Wpf;component/Images/BtnRedo.png";
+                myBrush.ImageSource = new ImageSourceConverter().ConvertFromString(packUri) as ImageSource;
+                BtnRedo.Background = myBrush;
+
                 currentId--;
-                ShowInCanvas("log/" + currentId.ToString());
-                if(currentId==0)
-                    BtnUndo.IsEnabled = false;
+
+                myCanvas.Children.Clear();
+                Model model = new Model();
+                model = (Model)model.DeepClone(dataSaver.LoadData("log/" + currentId.ToString()));
+                dataObject = model;
+                ShowInCanvas(dataObject);
+                if (currentId == 0)
+                {
+                    myBrush = new ImageBrush();
+                    packUri = "pack://application:,,,/Wpf;component/Images/BtnUndoNotActive.png";
+                    myBrush.ImageSource = new ImageSourceConverter().ConvertFromString(packUri) as ImageSource;
+                    BtnUndo.Background = myBrush;
+                }
             }
             else
             {
-                BtnUndo.IsEnabled = false;
+                ImageBrush myBrush = new ImageBrush();
+                string packUri = "pack://application:,,,/Wpf;component/Images/BtnUndoNotActive.png";
+                myBrush.ImageSource = new ImageSourceConverter().ConvertFromString(packUri) as ImageSource;
+                BtnUndo.Background = myBrush;
             }
         }
         /// <summary>
@@ -855,17 +983,36 @@ namespace Wpf
         /// <param name="e"></param>
         private void BtnRedo_Click(object sender, RoutedEventArgs e)
         {
+            Redo();
+        }
+
+        private void Redo()
+        {
             if (currentId < maxId)
             {
-                BtnUndo.IsEnabled = true;
+                ImageBrush myBrush1 = new ImageBrush();
+                string packUri1 = "pack://application:,,,/Wpf;component/Images/BtnUndo.png";
+                myBrush1.ImageSource = new ImageSourceConverter().ConvertFromString(packUri1) as ImageSource;
+                BtnUndo.Background = myBrush1;
+
                 currentId++;
-                ShowInCanvas("log/" + currentId.ToString());
+
+                myCanvas.Children.Clear();
+                ShowInCanvas(dataSaver.LoadData("log/" + currentId.ToString()));
                 if (currentId == maxId)
-                    BtnRedo.IsEnabled = false;
+                {
+                    ImageBrush myBrush3 = new ImageBrush();
+                    string packUri3 = "pack://application:,,,/Wpf;component/Images/BtnRedoNotActive.png";
+                    myBrush3.ImageSource = new ImageSourceConverter().ConvertFromString(packUri3) as ImageSource;
+                    BtnRedo.Background = myBrush3;
+                }
             }
             else
             {
-                BtnRedo.IsEnabled = false;
+                ImageBrush myBrush = new ImageBrush();
+                string packUri = "pack://application:,,,/Wpf;component/Images/BtnRedoNotActive.png";
+                myBrush.ImageSource = new ImageSourceConverter().ConvertFromString(packUri) as ImageSource;
+                BtnRedo.Background = myBrush;
             }
         }
 
@@ -882,42 +1029,59 @@ namespace Wpf
         /// <param name="type">Тип связи</param>
         void AddLine(object First, object Second, String type, int id)
         {
-            Point[] PStart = new Point[8];
-            Point[] PEnd = new Point[8];
 
-            if (First is Actor.myActor)
-            {
-                Actor.myActor Actor = (Actor.myActor)First;
-                PStart = GetMassPointActor(Actor);
-            }
+
+            Point[] PStart = GetPointStart(First);
+
+            Point[] PEnd = new Point[8];
             if (Second is Actor.myActor)
             {
                 Actor.myActor Actor = (Actor.myActor)Second;
                 PEnd = GetMassPointActor(Actor);
             }
-            if (First is Precedent.myPrecedent)
-            {
-                Precedent.myPrecedent Precedent = (Precedent.myPrecedent)First;
-                PStart = GetMassPointPrecedent(Precedent);
-            }
+
             if (Second is Precedent.myPrecedent)
             {
                 Precedent.myPrecedent Precedent = (Precedent.myPrecedent)Second;
                 PEnd = GetMassPointPrecedent(Precedent);
             }
-            if (First is Comment.myComment)
-            {
-                Comment.myComment Comment = (Comment.myComment)First;
-                PStart = GetMassPointComment(Comment);
-            }
+
             if (Second is Comment.myComment)
             {
                 Comment.myComment Comment = (Comment.myComment)Second;
                 PEnd = GetMassPointComment(Comment);
             }
          
-            MinimumDistance(PStart, PEnd); 
+            MinimumDistance(PStart, PEnd);
 
+            DrawLine(type, id,false);
+      
+            
+        }
+
+        private Point[] GetPointStart(object First)
+        {
+            Point[] PStart = new Point[8];
+            if (First is Actor.myActor)
+            {
+                Actor.myActor Actor = (Actor.myActor)First;
+                PStart = GetMassPointActor(Actor);
+            }
+            if (First is Precedent.myPrecedent)
+            {
+                Precedent.myPrecedent Precedent = (Precedent.myPrecedent)First;
+                PStart = GetMassPointPrecedent(Precedent);
+            }
+            if (First is Comment.myComment)
+            {
+                Comment.myComment Comment = (Comment.myComment)First;
+                PStart = GetMassPointComment(Comment);
+            }
+            return PStart;
+        }
+
+        private void DrawLine(String type, int id, bool animation)
+        {
             Label Label = new Label();
             ArrowLine aline = new ArrowLine();
             Label.BorderThickness = new Thickness(0);
@@ -925,19 +1089,23 @@ namespace Wpf
             aline.StrokeThickness = 2;
             if (type == "Association")
             {
-                Line line =new Line();
+                Line line = new Line();
                 line.Stroke = Brushes.Black;
                 line.StrokeThickness = 2;
                 line.X1 = StartPoint.X;
                 line.Y1 = StartPoint.Y;
                 line.X2 = EndPoint.X;
                 line.Y2 = EndPoint.Y;
-                FirstObject = true;
-                SecondObject = false;
-                FlagArrow = false;
-  
                 line.Uid = id.ToString();
-                line.MouseDown += myline_Move_MouseDown;
+                if (!animation)
+                {
+                    FirstObject = true;
+                    SecondObject = false;
+                    FlagArrow = false;
+                    
+                    line.MouseDown += myline_Move_MouseDown;
+                }
+                
                 myCanvas.Children.Add(line);
                 return;
             }
@@ -961,21 +1129,22 @@ namespace Wpf
                 aline.StrokeDashArray.Add(12);
                 Label.IsEnabled = false;
                 myCanvas.Children.Add(Label);
-                
+
             }
             aline.X1 = StartPoint.X;
             aline.Y1 = StartPoint.Y;
             aline.X2 = EndPoint.X;
             aline.Y2 = EndPoint.Y;
             aline.Uid = id.ToString();
-
-            FirstObject = true;
-            SecondObject = false;
-            FlagArrow = false;
-            aline.MouseDown += myAline_Move_MouseDown;
+            if (!animation)
+            {
+                
+                FirstObject = true;
+                SecondObject = false;
+                FlagArrow = false;
+                aline.MouseDown += myAline_Move_MouseDown;
+            }
             myCanvas.Children.Add(aline);
-      
-            
         }
         private void BtnNew_Click(object sender, RoutedEventArgs e)
         {
@@ -986,6 +1155,12 @@ namespace Wpf
             dataSaver.SaveData("log/0", dataObject);
             maxId = 0;
             currentId = 0;
+            myCanvas.Width = 1200;
+            myCanvas.Height = 666;
+            dataObject.widght = 1200;
+            dataObject.height = 666;
+
+
         }
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -993,22 +1168,27 @@ namespace Wpf
             dlg.Filter = "Uml documents (.usd)|*.usd"; // Filter files by extension
             if (dlg.ShowDialog().Value)
             {
-                for (int i = 0; i < myCanvas.Children.Count; ++i)
-                {
-                    if (myCanvas.Children[i] is Actor.myActor)
-                    {
-                        dataObject.edit_text_by_id(((Actor.myActor)myCanvas.Children[i]).Id, ((Actor.myActor)myCanvas.Children[i]).Text);
-                    }
-                    if (myCanvas.Children[i] is Precedent.myPrecedent)
-                    {
-                        dataObject.edit_text_by_id(((Precedent.myPrecedent)myCanvas.Children[i]).Id, ((Precedent.myPrecedent)myCanvas.Children[i]).Text);
-                    }
-                    if (myCanvas.Children[i] is Comment.myComment)
-                    {
-                        dataObject.edit_text_by_id(((Comment.myComment)myCanvas.Children[i]).Id, ((Comment.myComment)myCanvas.Children[i]).Text);
-                    }
-                }
+                SaveText();
                 dataSaver.SaveData(dlg.FileName, dataObject);
+            }
+        }
+
+        private void SaveText()
+        {
+            for (int i = 0; i < myCanvas.Children.Count; ++i)
+            {
+                if (myCanvas.Children[i] is Actor.myActor)
+                {
+                    dataObject.edit_text_by_id(((Actor.myActor)myCanvas.Children[i]).Id, ((Actor.myActor)myCanvas.Children[i]).Text);
+                }
+                if (myCanvas.Children[i] is Precedent.myPrecedent)
+                {
+                    dataObject.edit_text_by_id(((Precedent.myPrecedent)myCanvas.Children[i]).Id, ((Precedent.myPrecedent)myCanvas.Children[i]).Text);
+                }
+                if (myCanvas.Children[i] is Comment.myComment)
+                {
+                    dataObject.edit_text_by_id(((Comment.myComment)myCanvas.Children[i]).Id, ((Comment.myComment)myCanvas.Children[i]).Text);
+                }
             }
         }
 
@@ -1026,7 +1206,10 @@ namespace Wpf
                     currentId = 0;
                     maxId = 0;
 
-                    ShowInCanvas(dlg.FileName);
+                    myCanvas.Children.Clear();
+                    dataObject = dataSaver.LoadData(dlg.FileName);
+
+                    ShowInCanvas(dataObject);
                 }
                 else
                 {
@@ -1036,21 +1219,24 @@ namespace Wpf
 
         }
 
-        private void ShowInCanvas(string str)
+        private void ShowInCanvas(Model model)
         {
-            myCanvas.Children.Clear();
-            dataObject = dataSaver.LoadData(str);
-            SortedList<int, UmlObject> objects_list = dataObject.objects_list;
-            SortedList<int, Relation> relations_list = dataObject.relations_list;
+            SortedList<int, UmlObject> objects_list = model.objects_list;
+            SortedList<int, Relation> relations_list = model.relations_list;
+            myCanvas.Width = model.widght;
+            myCanvas.Height = model.height;
+
             foreach (KeyValuePair<int, UmlObject> i in objects_list)
             {
                 if (i.Value.type == "Actor")
                 {
                     addActorToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text);
+                    int x = 0;
+                    x++;
                 }
                 else if (i.Value.type == "Precedent")
                 {
-                    addPrecedentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text, i.Value.color);
+                    addPrecedentToCanvas(i.Value.x, i.Value.y, i.Key, i.Value.text, i.Value.getColor());
                 }
                 else if (i.Value.type == "Comment")
                 {
@@ -1119,21 +1305,21 @@ namespace Wpf
             var p = new Point[8];
             var precedent = (Precedent.myPrecedent)Object;
             p[0].X = Canvas.GetLeft(precedent);
-            p[1].X = Canvas.GetLeft(precedent) + 30;
-            p[2].X = Canvas.GetLeft(precedent) + 30;
-            p[3].X = Canvas.GetLeft(precedent) + 60;
-            p[4].X = Canvas.GetLeft(precedent) + 60;
-            p[5].X = Canvas.GetLeft(precedent) + 90;
-            p[6].X = Canvas.GetLeft(precedent) + 90;
-            p[7].X = Canvas.GetLeft(precedent) + 120;
-            p[0].Y = Canvas.GetTop(precedent) + 30;
-            p[1].Y = Canvas.GetTop(precedent) + 3;
-            p[2].Y = Canvas.GetTop(precedent) + 57;
+            p[1].X = Canvas.GetLeft(precedent) + 37.5;
+            p[2].X = Canvas.GetLeft(precedent) + 37.5;
+            p[3].X = Canvas.GetLeft(precedent) + 75;
+            p[4].X = Canvas.GetLeft(precedent) + 75;
+            p[5].X = Canvas.GetLeft(precedent) + 112.5;
+            p[6].X = Canvas.GetLeft(precedent) + 112.5;
+            p[7].X = Canvas.GetLeft(precedent) + 150;
+            p[0].Y = Canvas.GetTop(precedent) + 40;
+            p[1].Y = Canvas.GetTop(precedent) + 8;
+            p[2].Y = Canvas.GetTop(precedent) + 74;
             p[3].Y = Canvas.GetTop(precedent);
-            p[4].Y = Canvas.GetTop(precedent) + 60;
-            p[5].Y = Canvas.GetTop(precedent) + 3;
-            p[6].Y = Canvas.GetTop(precedent) + 57;
-            p[7].Y = Canvas.GetTop(precedent) + 30;
+            p[4].Y = Canvas.GetTop(precedent) + 80;
+            p[5].Y = Canvas.GetTop(precedent) + 8;
+            p[6].Y = Canvas.GetTop(precedent) + 74;
+            p[7].Y = Canvas.GetTop(precedent) + 40;
             return p;
         }
         private Point[] GetMassPointComment(object Object)
@@ -1394,7 +1580,7 @@ namespace Wpf
 
         public void SelectObject(object obj)
         {       
-            
+       
             if (obj is Actor.myActor)
             {
                 Actor.myActor actor = (Actor.myActor)obj;
@@ -1424,7 +1610,7 @@ namespace Wpf
                 }
                 else
                 {
-                    if (!(CtrlFlag || ShiftFlag))
+                    if (!(CtrlFlag || ShiftFlag || SelectingZone))
                     {
                         ResetAllSelected();
                         dataObject.reset_flags();
@@ -1443,7 +1629,7 @@ namespace Wpf
                 }
                 else
                 {
-                    if (!(CtrlFlag || ShiftFlag))
+                    if (!(CtrlFlag || ShiftFlag || SelectingZone))
                     {
                         ResetAllSelected();
                         dataObject.reset_flags();
@@ -1483,18 +1669,30 @@ namespace Wpf
         }
         private void IncStatus()
         {
-            BtnUndo.IsEnabled = true;
-            BtnRedo.IsEnabled = false;
+            ImageBrush myBrush = new ImageBrush();
+            string packUri = "pack://application:,,,/Wpf;component/Images/BtnUndo.png";
+            myBrush.ImageSource = new ImageSourceConverter().ConvertFromString(packUri) as ImageSource;
+            BtnUndo.Background = myBrush;
+
+            ImageBrush myBrush2 = new ImageBrush();
+            string packUri2 = "pack://application:,,,/Wpf;component/Images/BtnRedoNotActive.png";
+            myBrush2.ImageSource = new ImageSourceConverter().ConvertFromString(packUri2) as ImageSource;
+            BtnRedo.Background = myBrush2;
+
+            //BtnUndo.IsEnabled = true;
+            //BtnRedo.IsEnabled = false;
             currentId++;
+          
             maxId = currentId;
+            SaveText();
             dataSaver.SaveData("log/" + currentId.ToString(), dataObject);
         }
 
+        private void BtnQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show(this, "Горячие клавиши: \n\n ctrl-z шаг назад\n ctrl-y шаг вперед\n ctrl-a выделить все \n ctrl-x вырезать\n ctrl-с копировать  \n ctrl-v вставаить\n del - удалить выделенные элементы \n\n Разработчики:\n\n Буртовой А. \n Кузнецов М. \n Салем Салех Али ");
 
-
-
-
-
+        }
 
     }
 }

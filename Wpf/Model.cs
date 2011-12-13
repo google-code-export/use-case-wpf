@@ -5,10 +5,14 @@ using System.Text;
 using System.Windows.Media;
 using System.Collections;
 using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Wpf
 {
+
     [DataContract]
+    [Serializable]
     public class Relation
     {
         [DataMember]
@@ -27,6 +31,7 @@ namespace Wpf
     }
 
     [DataContract]
+    [Serializable]
     public class UmlObject
     {
         [DataMember]
@@ -38,34 +43,50 @@ namespace Wpf
         [DataMember]
         public string type { get; set; }
         [DataMember]
-        public Color color { get; set; }
+        public String color { get; set; }
+
         [DataMember]
         public double widht { get; set; }
         [DataMember]
         public double height { get; set; }
-
-        public bool selected { get; set; }
+       
+        public int selected { get; set; }
 
         public UmlObject()
         {
 
         }
 
-        public UmlObject(int x_in, int y_in, string text_in, string type_in)
+        public UmlObject(int x_in, int y_in, string text_in, string type_in, int sel)
         {
             x = x_in;
             y = y_in;
             text = text_in;
             type = type_in;
-            selected = false;
+            selected = sel;
+            color = Colors.White.ToString();
+        }
+
+        public Color getColor()
+        {
+            return (Color)ColorConverter.ConvertFromString(color);
+        }
+        public void setColor(Color value)
+        {
+            color = value.ToString();
         }
     }
 
     [DataContract]
+    [Serializable]
     public class Model
     {
         [DataMember]
-        private int max_id;
+        public double widght { get; set; }
+        [DataMember]
+        public double height { get; set; }
+        [DataMember]
+        public int max_id;
         [DataMember]
         public SortedList<int, UmlObject> objects_list { get; set; }
         [DataMember]
@@ -74,10 +95,36 @@ namespace Wpf
         // Конструктор
         public Model()
         {
+            widght = 1200;
+            height = 666;
             max_id = -1;
             objects_list = new SortedList<int, UmlObject>();
             relations_list = new SortedList<int, Relation>();
         }
+        public Model(Model model)
+        {
+            max_id = model.max_id;
+            objects_list = model.objects_list;
+            relations_list = model.relations_list;
+        }
+
+        public object DeepClone(object obj)
+        {
+            if (obj == null) { return null; }
+            object result = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(ms, obj);
+                ms.Position = 0;
+                result = bf.Deserialize(ms);
+            }
+            return result;
+        }
+
+
+
+
         /* 
          * Добовлет объект и возвращает id добавленного элемента
          * @x  - координата
@@ -88,7 +135,7 @@ namespace Wpf
         public int add_object(int x, int y, string text, string type)
         {
             max_id++;
-            UmlObject obj = new UmlObject(x, y, text, type);
+            UmlObject obj = new UmlObject(x, y, text, type, 0);
             objects_list.Add(max_id, obj);
 
             return max_id;
@@ -119,6 +166,7 @@ namespace Wpf
         */
         public void edit_text_by_id(int id, string text)
         {
+
             objects_list[id].text = text;
         }
         /* 
@@ -128,16 +176,22 @@ namespace Wpf
         */
         public void edit_color_by_id(int id, Color color)
         {
-            objects_list[id].color = color;
+            objects_list[id].color = color.ToString();
         }
 
         public void edit_selected_by_id(int id, bool value)
         {
-            objects_list[id].selected = value;
+            if (value)
+                objects_list[id].selected = 1;
+            else
+                objects_list[id].selected = 0;
         }
         public bool check_selected(int id)
         {
-            return objects_list[id].selected;
+            if (objects_list[id].selected == 1)
+                return true;
+            else
+                return false;
         }
 
         /* Вернуть id связей которые входят в объект
@@ -228,7 +282,14 @@ namespace Wpf
         {
             foreach (KeyValuePair<int, UmlObject> i in objects_list)
             {
-                i.Value.selected = false;
+                i.Value.selected = 0;
+            }
+        }
+        public void select_all_flags()
+        {
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
+            {
+                i.Value.selected = 1;
             }
         }
         public void clear_for_copy()
@@ -236,7 +297,7 @@ namespace Wpf
             List<int> ids_list = new List<int>();
             foreach (KeyValuePair<int, UmlObject> i in objects_list)
             {
-                if (!i.Value.selected)
+                if (i.Value.selected == 0)
                 {
                     ids_list.Add(i.Key);
                 }
@@ -256,12 +317,55 @@ namespace Wpf
             List<int> ids = new List<int>();
             foreach (KeyValuePair<int, UmlObject> i in objects_list)
             {
-                if (i.Value.selected)
+                if (i.Value.selected == 1)
                 {
                     ids.Add(i.Key);
                 }
             }
             return ids;
+        }
+
+        private SortedList<int, UmlObject> editUmlObjectsIds(int max)
+        {
+            SortedList<int, UmlObject> objects_list_buf = new SortedList<int, UmlObject>();
+            foreach (KeyValuePair<int, UmlObject> i in objects_list)
+            {
+                UmlObject buf = new UmlObject(i.Value.x + 10, i.Value.y + 10, i.Value.text, i.Value.type, i.Value.selected);
+                buf.widht = i.Value.widht;
+                buf.height = i.Value.height;
+                buf.color = i.Value.color;
+                objects_list_buf.Add(i.Key + max, buf);
+
+            }
+            return objects_list_buf;
+        }
+        private SortedList<int, Relation> editRelationsIds(int max)
+        {
+            SortedList<int, Relation> relations_list_buf = new SortedList<int, Relation>();
+            foreach (KeyValuePair<int, Relation> i in relations_list)
+            {
+                Relation buf = new Relation(i.Value.from + max, i.Value.to + max, i.Value.type);
+                relations_list_buf.Add(i.Key + max, buf);
+            }
+            return relations_list_buf;
+        }
+        public void editIds(int max)
+        {
+            relations_list = editRelationsIds(max);
+            objects_list = editUmlObjectsIds(max);
+        }
+        public void merge(Model obj)
+        {
+
+            foreach (KeyValuePair<int, UmlObject> i in obj.objects_list)
+            {
+                objects_list.Add(i.Key, i.Value);
+            }
+            foreach (KeyValuePair<int, Relation> i in obj.relations_list)
+            {
+                relations_list.Add(i.Key, i.Value);
+            }
+            max_id += obj.max_id + 1;
         }
     }
 }

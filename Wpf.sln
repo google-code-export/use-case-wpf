@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wpf", "Wpf\Wpf.csproj", "{489B740B-65B4-4C71-A358-32D1B67DAD76}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupUseCase", "SetupUseCase\SetupUseCase.vdproj", "{3F3AD4B4-1FD7-4A2E-9ADB-DD9FC757B790}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "UseCase", "UseCase\UseCase.vdproj", "{713C2921-E2F0-4A4A-A81E-B4C711212936}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +15,8 @@ Global
 		{489B740B-65B4-4C71-A358-32D1B67DAD76}.Debug|x86.Build.0 = Debug|x86
 		{489B740B-65B4-4C71-A358-32D1B67DAD76}.Release|x86.ActiveCfg = Release|x86
 		{489B740B-65B4-4C71-A358-32D1B67DAD76}.Release|x86.Build.0 = Release|x86
-		{3F3AD4B4-1FD7-4A2E-9ADB-DD9FC757B790}.Debug|x86.ActiveCfg = Debug
-		{3F3AD4B4-1FD7-4A2E-9ADB-DD9FC757B790}.Release|x86.ActiveCfg = Release
+		{713C2921-E2F0-4A4A-A81E-B4C711212936}.Debug|x86.ActiveCfg = Debug
+		{713C2921-E2F0-4A4A-A81E-B4C711212936}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

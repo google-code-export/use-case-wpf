@@ -53,8 +53,8 @@ namespace Wpf
             dataObject = new Model();
             dataSaver = new Serializer();
             InitializeComponent();
-            Directory.CreateDirectory("log");
-            dataSaver.SaveData("log/0",dataObject);
+            Directory.CreateDirectory("c:/log");
+            dataSaver.SaveData("c:/log/0", dataObject);
         }
         //***************************Обработчики событий*****************************
         /// <summary>
@@ -732,7 +732,7 @@ namespace Wpf
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            Directory.Delete("log", true);
+            Directory.Delete("c:/log", true);
         }
         /// <summary>
         /// Отжате кнопок
@@ -957,7 +957,7 @@ namespace Wpf
 
                 myCanvas.Children.Clear();
                 Model model = new Model();
-                model = (Model)model.DeepClone(dataSaver.LoadData("log/" + currentId.ToString()));
+                model = (Model)model.DeepClone(dataSaver.LoadData("c:/log/" + currentId.ToString()));
                 dataObject = model;
                 ShowInCanvas(dataObject);
                 if (currentId == 0)
@@ -998,7 +998,7 @@ namespace Wpf
                 currentId++;
 
                 myCanvas.Children.Clear();
-                ShowInCanvas(dataSaver.LoadData("log/" + currentId.ToString()));
+                ShowInCanvas(dataSaver.LoadData("c:/log/" + currentId.ToString()));
                 if (currentId == maxId)
                 {
                     ImageBrush myBrush3 = new ImageBrush();
@@ -1150,9 +1150,9 @@ namespace Wpf
         {
             myCanvas.Children.Clear();
             dataObject.clear();
-            Directory.Delete("log",true);
-            Directory.CreateDirectory("log");
-            dataSaver.SaveData("log/0", dataObject);
+            Directory.Delete("c:/log/", true);
+            Directory.CreateDirectory("c:/log/");
+            dataSaver.SaveData("c:/log/0", dataObject);
             maxId = 0;
             currentId = 0;
             myCanvas.Width = 1200;
@@ -1202,7 +1202,7 @@ namespace Wpf
                 string str = dlg.FileName.Remove(0, index+1);
                 if (str == "usd")
                 {
-                    File.Copy(dlg.FileName, "log/0", true);
+                    File.Copy(dlg.FileName, "c:/log/0", true);
                     currentId = 0;
                     maxId = 0;
 
@@ -1685,7 +1685,7 @@ namespace Wpf
           
             maxId = currentId;
             SaveText();
-            dataSaver.SaveData("log/" + currentId.ToString(), dataObject);
+            dataSaver.SaveData("c:/log/" + currentId.ToString(), dataObject);
         }
 
         private void BtnQuestion_Click(object sender, RoutedEventArgs e)

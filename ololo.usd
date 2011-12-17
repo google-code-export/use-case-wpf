@@ -1,0 +1,32 @@
+﻿<Model xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/Wpf">
+  <height>666</height>
+  <max_id>1</max_id>
+  <objects_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+    <d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+      <d2p1:Key>0</d2p1:Key>
+      <d2p1:Value>
+        <color>#FFFFFFFF</color>
+        <height>0</height>
+        <text>Text</text>
+        <type>Actor</type>
+        <widht>0</widht>
+        <x>50</x>
+        <y>170</y>
+      </d2p1:Value>
+    </d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+    <d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+      <d2p1:Key>1</d2p1:Key>
+      <d2p1:Value>
+        <color>#FFFFFFFF</color>
+        <height>0</height>
+        <text>Text</text>
+        <type>Actor</type>
+        <widht>0</widht>
+        <x>256</x>
+        <y>188</y>
+      </d2p1:Value>
+    </d2p1:KeyValueOfintUmlObjectXi8CSFo9>
+  </objects_list>
+  <relations_list xmlns:d2p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+  <widght>1200</widght>
+</Model>
